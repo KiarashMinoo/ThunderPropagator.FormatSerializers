@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.1] — 2026-07-20
+
+### 🚀 Features
+
+- add format serializer packages `(aba4f73)` — Kiarash Minoo
+
+### 📝 Documentation
+
+- rebuild serializer documentation `(743ccfb)` — Kiarash Minoo
+
 ## [1.0.1-beta.108] — 2026-07-20
 
 ### 📦 Dependencies
