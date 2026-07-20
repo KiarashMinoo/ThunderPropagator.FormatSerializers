@@ -51,6 +51,7 @@
             <Build Solution="*|ARM64" Project="false" />
             <Build Solution="*|x64" Project="false" />
             <Build Solution="*|x86" Project="false" />
+            <Build Solution="Release|Any CPU" Project="false" />
         </Project>
         <Project Path="Tests/ThunderPropagator.UnitTests/ThunderPropagator.UnitTests.csproj">
             <Platform Solution="*|ARM64" Project="ARM64" />
@@ -59,6 +60,7 @@
             <Build Solution="*|ARM64" Project="false" />
             <Build Solution="*|x64" Project="false" />
             <Build Solution="*|x86" Project="false" />
+            <Build Solution="Release|Any CPU" Project="false" />
         </Project>
     </Folder>
 </Solution>
