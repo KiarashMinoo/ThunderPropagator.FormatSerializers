@@ -1,0 +1,64 @@
+<Solution>
+    <Configurations>
+        <Platform Name="Any CPU" />
+        <Platform Name="ARM64" />
+        <Platform Name="x64" />
+        <Platform Name="x86" />
+    </Configurations>
+    <Folder Name="/Solution Items/">
+        <File Path="Directory.Build.props" />
+        <File Path="Directory.Packages.props" />
+        <File Path="global.json" />
+        <File Path="README.md" />
+    </Folder>
+    <Folder Name="/src/">
+        <Project Path="src/ThunderPropagator.FormatSerializers.MessagePack/ThunderPropagator.FormatSerializers.MessagePack.csproj">
+            <Platform Solution="*|ARM64" Project="ARM64" />
+            <Platform Solution="*|x64" Project="x64" />
+            <Platform Solution="*|x86" Project="x86" />
+        </Project>
+        <Project Path="src/ThunderPropagator.FormatSerializers.NetJson/ThunderPropagator.FormatSerializers.NetJson.csproj">
+            <Platform Solution="*|ARM64" Project="ARM64" />
+            <Platform Solution="*|x64" Project="x64" />
+            <Platform Solution="*|x86" Project="x86" />
+        </Project>
+        <Project Path="src/ThunderPropagator.FormatSerializers.Protobuf/ThunderPropagator.FormatSerializers.Protobuf.csproj">
+            <Platform Solution="*|ARM64" Project="ARM64" />
+            <Platform Solution="*|x64" Project="x64" />
+            <Platform Solution="*|x86" Project="x86" />
+        </Project>
+        <Project Path="src/ThunderPropagator.FormatSerializers.Toon/ThunderPropagator.FormatSerializers.Toon.csproj">
+            <Platform Solution="*|ARM64" Project="ARM64" />
+            <Platform Solution="*|x64" Project="x64" />
+            <Platform Solution="*|x86" Project="x86" />
+        </Project>
+        <Project Path="src/ThunderPropagator.FormatSerializers.Xml/ThunderPropagator.FormatSerializers.Xml.csproj">
+            <Platform Solution="*|ARM64" Project="ARM64" />
+            <Platform Solution="*|x64" Project="x64" />
+            <Platform Solution="*|x86" Project="x86" />
+        </Project>
+        <Project Path="src/ThunderPropagator.FormatSerializers.Yaml/ThunderPropagator.FormatSerializers.Yaml.csproj">
+            <Platform Solution="*|ARM64" Project="ARM64" />
+            <Platform Solution="*|x64" Project="x64" />
+            <Platform Solution="*|x86" Project="x86" />
+        </Project>
+    </Folder>
+    <Folder Name="/Tests/">
+        <Project Path="Tests/ArchTests/ArchTests.csproj">
+            <Platform Solution="*|ARM64" Project="ARM64" />
+            <Platform Solution="*|x64" Project="x64" />
+            <Platform Solution="*|x86" Project="x86" />
+            <Build Solution="*|ARM64" Project="false" />
+            <Build Solution="*|x64" Project="false" />
+            <Build Solution="*|x86" Project="false" />
+        </Project>
+        <Project Path="Tests/ThunderPropagator.UnitTests/ThunderPropagator.UnitTests.csproj">
+            <Platform Solution="*|ARM64" Project="ARM64" />
+            <Platform Solution="*|x64" Project="x64" />
+            <Platform Solution="*|x86" Project="x86" />
+            <Build Solution="*|ARM64" Project="false" />
+            <Build Solution="*|x64" Project="false" />
+            <Build Solution="*|x86" Project="false" />
+        </Project>
+    </Folder>
+</Solution>

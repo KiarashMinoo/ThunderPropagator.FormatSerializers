@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    <TargetFramework>net10.0</TargetFramework>
+    <TargetFrameworks/>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+    <PackageReference Include="xunit"/>
+    <PackageReference Include="xunit.runner.visualstudio"/>
+    <PackageReference Include="coverlet.collector">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NSubstitute"/>
+    <PackageReference Include="BenchmarkDotNet"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ThunderPropagator.FormatSerializers.MessagePack\ThunderPropagator.FormatSerializers.MessagePack.csproj"/>
+    <ProjectReference Include="..\..\src\ThunderPropagator.FormatSerializers.NetJson\ThunderPropagator.FormatSerializers.NetJson.csproj"/>
+    <ProjectReference Include="..\..\src\ThunderPropagator.FormatSerializers.Protobuf\ThunderPropagator.FormatSerializers.Protobuf.csproj"/>
+    <ProjectReference Include="..\..\src\ThunderPropagator.FormatSerializers.Toon\ThunderPropagator.FormatSerializers.Toon.csproj"/>
+    <ProjectReference Include="..\..\src\ThunderPropagator.FormatSerializers.Xml\ThunderPropagator.FormatSerializers.Xml.csproj"/>
+    <ProjectReference Include="..\..\src\ThunderPropagator.FormatSerializers.Yaml\ThunderPropagator.FormatSerializers.Yaml.csproj"/>
+  </ItemGroup>
+
+</Project>
