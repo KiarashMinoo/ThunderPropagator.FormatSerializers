@@ -1,9 +1,5 @@
-## [1.0.1-beta.1] — 2026-07-20
+## [1.0.1-beta.2] — 2026-07-20
 
-### 🚀 Features
+### ⚙️ CI / Tooling
 
-- add format serializer packages `(aba4f73)` — Kiarash Minoo
-
-### 📝 Documentation
-
-- rebuild serializer documentation `(743ccfb)` — Kiarash Minoo
+- exclude tests from release solution builds `(3ef56a0)` — Kiarash Minoo
