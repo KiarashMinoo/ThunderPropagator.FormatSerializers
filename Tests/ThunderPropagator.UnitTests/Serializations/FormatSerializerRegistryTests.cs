@@ -44,8 +44,8 @@ namespace ThunderPropagator.UnitTests.Serializations
         // rather than InlineData, which would require re-converting from a plain int each time.
         public static IEnumerable<object[]> AllSerializerTypes()
         {
-            yield return [SerializerType.Json];
-            yield return [SerializerType.NJson];
+            yield return [JsonFormatSerializer.Json];
+            yield return [NJsonFormatSerializer.NJson];
             yield return [NetJsonFormatSerializer.NetJson];
             yield return [ProtobufFormatSerializer.Protobuf];
             yield return [MessagePackFormatSerializer.MessagePack];

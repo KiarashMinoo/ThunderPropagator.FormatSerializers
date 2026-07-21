@@ -64,7 +64,7 @@ jobs:
     uses: KiarashMinoo/.github/.github/workflows/reusable-ci.yml@main
     with:
       channel: beta
-      solution-path: 'ThunderPropagator.BuildingBlocks.slnx'
+      solution-path: 'ThunderPropagator.FormatSerializers.slnx'
       publish-to-nuget: true
       nuget-target: 'nuget.org'
       nuget-auth-mode: 'classic'
@@ -83,7 +83,7 @@ jobs:
     uses: KiarashMinoo/.github/.github/workflows/reusable-ci.yml@main
     with:
       channel: ${{ inputs.release-mode }}
-      solution-path: 'ThunderPropagator.BuildingBlocks.slnx'
+      solution-path: 'ThunderPropagator.FormatSerializers.slnx'
       publish-to-nuget: true
       nuget-target: 'nuget.org'
       nuget-auth-mode: 'classic'

@@ -101,7 +101,7 @@ namespace ThunderPropagator.UnitTests.Serializations
         [Fact]
         public void SerializerType_ShouldBeJson()
         {
-            Assert.Equal(SerializerType.Json, _serializer.SerializerType);
+            Assert.Equal(JsonFormatSerializer.Json, _serializer.SerializerType);
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace ThunderPropagator.UnitTests.Serializations
         [Fact]
         public void SerializerType_ShouldBeNJson()
         {
-            Assert.Equal(SerializerType.NJson, _serializer.SerializerType);
+            Assert.Equal(NJsonFormatSerializer.NJson, _serializer.SerializerType);
         }
     }
 

@@ -1,6 +1,6 @@
 name: DAST — Dynamic Application Security Testing
 
-# ThunderPropagator.BuildingBlocks is a NuGet library with no built-in HTTP server.
+# ThunderPropagator.FormatSerializers is a NuGet library with no built-in HTTP server.
 # DAST must be triggered manually against an external environment that consumes the library.
 on:
   workflow_dispatch:
