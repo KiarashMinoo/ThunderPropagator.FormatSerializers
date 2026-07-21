@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.4] — 2026-07-21
+
+### 🐛 Bug Fixes
+
+- update solution path references to FormatSerializers in CI and security testing workflows `(c908718)` — Kiarash Minoo
+
 ## [1.0.1-beta.3] — 2026-07-21
 
 ### 🏠 Chores
