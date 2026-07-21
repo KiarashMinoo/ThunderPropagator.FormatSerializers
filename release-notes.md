@@ -1,5 +1,5 @@
-## [1.0.1-beta.3] — 2026-07-21
+## [1.0.1-beta.4] — 2026-07-21
 
-### 🏠 Chores
+### 🐛 Bug Fixes
 
-- update BuildingBlocksVersion to 1.0.1-beta.114 `(b00d47b)` — Kiarash Minoo
+- update solution path references to FormatSerializers in CI and security testing workflows `(c908718)` — Kiarash Minoo
