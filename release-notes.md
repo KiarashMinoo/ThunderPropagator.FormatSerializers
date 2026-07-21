@@ -1,5 +1,5 @@
-## [1.0.1-beta.4] — 2026-07-21
+## [1.0.1-beta.5] — 2026-07-21
 
-### 🐛 Bug Fixes
+### 🚀 Features
 
-- update solution path references to FormatSerializers in CI and security testing workflows `(c908718)` — Kiarash Minoo
+- add serializer registration extensions `(f4e8a19)` — Kiarash Minoo
