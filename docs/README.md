@@ -7,7 +7,7 @@
 - [Format comparison](#format-comparison)
 - [Shared behavior](#shared-behavior)
 - [Package dependencies](#package-dependencies)
-- [Architecture](#architecture)
+- [Diagrams](#diagrams)
 - [Build and test](#build-and-test)
 - [Coverage audit](#coverage-audit)
 
@@ -49,7 +49,7 @@ This documentation covers the six .NET serializer packages in ThunderPropagator.
 
 | Package | Version | Authors | License | Used by | Registry / project |
 |---|---:|---|---|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.111` | ThunderPropagator | Apache-2.0 | All modules | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
+| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | ThunderPropagator | Apache-2.0 | All modules | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
 | `MessagePack` | `3.1.8` | neuecc, aarnott | MIT | [MessagePack](./MessagePack/README.md#package-dependencies) | [NuGet](https://www.nuget.org/packages/MessagePack/3.1.8) · [Project](https://github.com/MessagePack-CSharp/MessagePack-CSharp) |
 | `MessagePackAnalyzer` | `3.1.8` | neuecc, aarnott | MIT | [MessagePack](./MessagePack/README.md#package-dependencies) | [NuGet](https://www.nuget.org/packages/MessagePackAnalyzer/3.1.8) · [Project](https://github.com/MessagePack-CSharp/MessagePack-CSharp) |
 | `NetJSON` | `1.4.5` | TJ Bakre | Not declared | [NetJSON](./NetJson/README.md#package-dependencies) | [NuGet](https://www.nuget.org/packages/NetJSON/1.4.5) · [Project](https://github.com/rpgmaker/NetJSON) |
@@ -57,7 +57,9 @@ This documentation covers the six .NET serializer packages in ThunderPropagator.
 | `ToonNet` | `1.0.4` | Nicola Santoro | MIT | [TOON](./Toon/README.md#package-dependencies) | [NuGet](https://www.nuget.org/packages/ToonNet/1.0.4) · [Project](https://github.com/Nicola898989/ToonNet) |
 | `YamlDotNet` | `18.1.0` | Antoine Aubry | MIT | [YAML](./Yaml/README.md#package-dependencies) | [NuGet](https://www.nuget.org/packages/YamlDotNet/18.1.0) · [Project](https://github.com/aaubry/YamlDotNet) |
 
-## Architecture
+## Diagrams
+
+### Repository architecture
 ```mermaid
 graph TD
     Registry[BuildingBlocks serializer registry]

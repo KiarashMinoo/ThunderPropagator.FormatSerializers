@@ -22,6 +22,7 @@ The Protobuf module adapts protobuf-net to the ThunderPropagator serializer regi
 | File | Primary type(s) | LOC (approx.) | Responsibility |
 |---|---|---:|---|
 | `AssemblyInfo.cs` | Assembly attributes | 3 | Exposes internals for tests and dynamic proxies. |
+| `DependencyInjection.cs` | `DependencyInjection` | 20 | Registers the serializer and deserializer implementations. |
 | `ProtobufFormatSerializer.cs` | `ProtobufFormatSerializer` | 58 | Implements common serializer and deserializer contracts. |
 | `ProtobufHelper.cs` | `ProtobufHelper` | 69 | Provides stream, byte-array, and Base64 extensions. |
 | Project file | Package definition | 6 | Declares BuildingBlocks and protobuf-net dependencies. |
@@ -30,8 +31,15 @@ The Protobuf module adapts protobuf-net to the ThunderPropagator serializer regi
 
 | Type | Kind | Summary | Inherits/implements | Key members |
 |---|---|---|---|---|
+| `DependencyInjection` | Static class | Adds protobuf format services to an `IServiceCollection`. | — | `AddProtobufFormatSerializer` |
 | `ProtobufFormatSerializer` | Sealed class | Protobuf adapter using ID `4` and `application/x-protobuf`. | `IFormatSerializer`, `IFormatDeserializer` | `Serialize`, `SerializeToBytes`, `Deserialize` |
 | `ProtobufHelper` | Static class | Direct protobuf-net conversion extensions. | — | `ToProtobuf*`, `FromProtobuf*` |
+
+### DependencyInjection
+
+- Namespace: `ThunderPropagator.FormatSerializers.Protobuf`
+- `AddProtobufFormatSerializer(IServiceCollection)` rejects a null collection, registers `ProtobufFormatSerializer` for both format interfaces, and returns the original collection.
+- Use it during startup before resolving serializers from the BuildingBlocks registry.
 
 ### ProtobufFormatSerializer
 
@@ -65,7 +73,7 @@ Prefer stream or byte methods for binary transports. Base64 adds size and alloca
 
 | Package | Version | Description | Links |
 |---|---:|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.111` | Shared format contracts, telemetry, helpers, and sensitive-data behavior. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
+| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | Shared format contracts, telemetry, helpers, and sensitive-data behavior. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
 | `protobuf-net` | `3.2.56` | Protocol Buffers serializer for .NET. | [NuGet](https://www.nuget.org/packages/protobuf-net/3.2.56) · [Repository](https://github.com/protobuf-net/protobuf-net) |
 
 ## Diagrams

@@ -75,7 +75,7 @@ Use byte or stream APIs on binary transports to avoid Base64's allocation and si
 
 | Package | Version | Description | Links |
 |---|---:|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.111` | Format contracts, telemetry, DI helpers, and sensitive-data handling. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
+| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | Format contracts, telemetry, DI helpers, and sensitive-data handling. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
 | `MessagePack` | `3.1.8` | MessagePack-CSharp runtime serializer. | [NuGet](https://www.nuget.org/packages/MessagePack/3.1.8) · [Repository](https://github.com/MessagePack-CSharp/MessagePack-CSharp) |
 | `MessagePackAnalyzer` | `3.1.8` | Compile-time MessagePack diagnostics; private build asset. | [NuGet](https://www.nuget.org/packages/MessagePackAnalyzer/3.1.8) · [Repository](https://github.com/MessagePack-CSharp/MessagePack-CSharp) |
 

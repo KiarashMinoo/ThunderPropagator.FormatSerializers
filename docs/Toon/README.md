@@ -22,6 +22,7 @@ The TOON module integrates ToonNet's Token-Oriented Object Notation encoding wit
 | File | Primary type(s) | LOC (approx.) | Responsibility |
 |---|---|---:|---|
 | `AssemblyInfo.cs` | Assembly attributes | 3 | Exposes internals for tests and dynamic proxies. |
+| `DependencyInjection.cs` | `DependencyInjection` | 20 | Registers the serializer and deserializer implementations. |
 | `ToonFormatSerializer.cs` | `ToonFormatSerializer` | 58 | Implements the common format contracts. |
 | `ToonHelper.cs` | `ToonHelper` | 101 | Provides configurable TOON conversion extensions. |
 | Project file | Package definition | 6 | Declares BuildingBlocks and ToonNet dependencies. |
@@ -30,8 +31,15 @@ The TOON module integrates ToonNet's Token-Oriented Object Notation encoding wit
 
 | Type | Kind | Summary | Inherits/implements | Key members |
 |---|---|---|---|---|
+| `DependencyInjection` | Static class | Adds TOON format services to an `IServiceCollection`. | — | `AddToonFormatSerializer` |
 | `ToonFormatSerializer` | Sealed class | TOON adapter using ID `8` and `text/toon`. | `IFormatSerializer`, `IFormatDeserializer` | `Serialize`, `SerializeToBytes`, `Deserialize` |
 | `ToonHelper` | Static class | Direct text, UTF-8 byte, and Base64 conversion API. | — | `ToToon*`, `FromToon*` |
+
+### DependencyInjection
+
+- Namespace: `ThunderPropagator.FormatSerializers.Toon`
+- `AddToonFormatSerializer(IServiceCollection)` rejects a null collection, registers `ToonFormatSerializer` for both format interfaces, and returns the original collection.
+- Register it while configuring the application service collection.
 
 ### ToonFormatSerializer
 
@@ -66,7 +74,7 @@ Use the text representation when possible; byte and Base64 variants add encoding
 
 | Package | Version | Description | Links |
 |---|---:|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.111` | Common serializer contracts, JSON options, telemetry, and exception models. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
+| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | Common serializer contracts, JSON options, telemetry, and exception models. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
 | `ToonNet` | `1.0.4` | TOON encoder and decoder for .NET. | [NuGet](https://www.nuget.org/packages/ToonNet/1.0.4) |
 
 ## Diagrams

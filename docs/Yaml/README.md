@@ -22,6 +22,7 @@ The YAML module provides the most extensible serializer integration in this repo
 | File | Primary type(s) | LOC (approx.) | Responsibility |
 |---|---|---:|---|
 | `AssemblyInfo.cs` | Assembly attributes | 3 | Exposes internals for tests and dynamic proxies. |
+| `DependencyInjection.cs` | `DependencyInjection` | 20 | Registers the serializer and deserializer implementations. |
 | `YamlFormatSerializer.cs` | `YamlFormatSerializer` | 59 | Implements common format contracts. |
 | `YamlHelper.cs` | `YamlHelper` | 231 | Builds configured YamlDotNet serializers and exposes conversion helpers. |
 | `YamlNodeDeserializerAttribute.cs` | `YamlNodeDeserializerAttribute` | 11 | Associates a node deserializer with a model. |
@@ -34,6 +35,7 @@ The YAML module provides the most extensible serializer integration in this repo
 
 | Type | Kind | Summary | Inherits/implements | Key members |
 |---|---|---|---|---|
+| `DependencyInjection` | Static class | Adds YAML format services to an `IServiceCollection`. | — | `AddYamlFormatSerializer` |
 | `YamlFormatSerializer` | Sealed class | YAML adapter using ID `7` and `application/yaml`. | `IFormatSerializer`, `IFormatDeserializer` | `Serialize`, `SerializeToBytes`, `Deserialize` |
 | `YamlHelper` | Static class | Configures YamlDotNet and exposes text, byte, Base64, and runtime-type methods. | — | `DefaultSerializerSettings`, `ToYaml*`, `FromYaml*` |
 | `YamlSerializerSettings` | Class | YAML serializer/deserializer options. | — | naming, resolver, converter, and construction properties |
@@ -43,6 +45,12 @@ The YAML module provides the most extensible serializer integration in this repo
 | `BaseYamlTypeConverter` | Abstract class | Common parser/emitter helpers for custom converters. | — | `Accepts`, mapping/sequence, scalar, enum, boolean, and number helpers |
 | `YamlTypeConverter` | Abstract class | Non-generic object converter base. | `BaseYamlTypeConverter`, `IYamlTypeConverter` | `WriteYamlInternal`, `ReadYamlInternal` |
 | `YamlTypeConverter<T>` | Abstract class | Strongly typed converter base. | `BaseYamlTypeConverter`, `IYamlTypeConverter<T>` | `Accepts`, `WriteYamlInternal`, `ReadYamlInternal` |
+
+### DependencyInjection
+
+- Namespace: `ThunderPropagator.FormatSerializers.Yaml`
+- `AddYamlFormatSerializer(IServiceCollection)` rejects a null collection, registers `YamlFormatSerializer` for both format interfaces, and returns the original collection.
+- Call it during startup; operation-local or global YAML settings remain configured through `YamlHelper`.
 
 ### YamlFormatSerializer
 
@@ -107,7 +115,7 @@ YamlDotNet serializer/deserializer builders are rebuilt for each operation, favo
 
 | Package | Version | Description | Links |
 |---|---:|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.111` | Common contracts, telemetry, and sensitive-data processing. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
+| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | Common contracts, telemetry, and sensitive-data processing. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
 | `YamlDotNet` | `18.1.0` | YAML parser, emitter, serializer, and extension contracts. | [NuGet](https://www.nuget.org/packages/YamlDotNet/18.1.0) · [Repository](https://github.com/aaubry/YamlDotNet) |
 
 ## Diagrams

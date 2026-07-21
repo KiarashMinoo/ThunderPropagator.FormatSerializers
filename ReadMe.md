@@ -8,11 +8,11 @@ Format-specific .NET adapters for the ThunderPropagator serializer registry. The
 The generated [documentation hub](docs/README.md) compares formats and links to API contracts, dependencies, diagrams, and usage recipes.
 
 - [MessagePack](docs/MessagePack/README.md) `Types:3` `Files:5` `Diagrams:✓`
-- [NetJSON](docs/NetJson/README.md) `Types:2` `Files:4` `Diagrams:✓`
-- [Protobuf](docs/Protobuf/README.md) `Types:2` `Files:4` `Diagrams:✓`
-- [TOON](docs/Toon/README.md) `Types:2` `Files:4` `Diagrams:✓`
-- [XML](docs/Xml/README.md) `Types:2` `Files:4` `Diagrams:✓`
-- [YAML](docs/Yaml/README.md) `Types:9` `Files:8` `Diagrams:✓`
+- [NetJSON](docs/NetJson/README.md) `Types:3` `Files:5` `Diagrams:✓`
+- [Protobuf](docs/Protobuf/README.md) `Types:3` `Files:5` `Diagrams:✓`
+- [TOON](docs/Toon/README.md) `Types:3` `Files:5` `Diagrams:✓`
+- [XML](docs/Xml/README.md) `Types:3` `Files:5` `Diagrams:✓`
+- [YAML](docs/Yaml/README.md) `Types:10` `Files:9` `Diagrams:✓`
 
 ### Package sources
 
@@ -24,7 +24,7 @@ dotnet restore
 dotnet build -c Release
 ```
 
-**Last generated:** July 20, 2026
+**Last generated:** July 21, 2026
 <!-- repo-docs:end -->
 
 ## Packages
@@ -38,7 +38,7 @@ dotnet build -c Release
 | `ThunderPropagator.FormatSerializers.Xml` | XML | 6 | `application/xml` | XML |
 | `ThunderPropagator.FormatSerializers.Yaml` | YAML | 7 | `application/yaml` | YAML |
 
-All packages currently use repository version `1.0.1-beta.0`. Platform-specific and Debug package suffixes are supplied by the shared build configuration.
+All packages currently use repository version `1.0.1-beta.3`. Platform-specific and Debug package suffixes are supplied by the shared build configuration.
 
 ## Usage
 

@@ -22,6 +22,7 @@ The NetJSON module exposes NetJSON through ThunderPropagator's common serializer
 | File | Primary type(s) | LOC (approx.) | Responsibility |
 |---|---|---:|---|
 | `AssemblyInfo.cs` | Assembly attributes | 3 | Exposes internals for testing and proxies. |
+| `DependencyInjection.cs` | `DependencyInjection` | 20 | Registers the serializer and deserializer implementations. |
 | `NetJsonFormatSerializer.cs` | `NetJsonFormatSerializer` | 57 | Implements the common format contracts. |
 | `NetJsonHelper.cs` | `NetJsonHelper` | 137 | Provides JSON, UTF-8 byte, Base64, and runtime-type helpers. |
 | Project file | Package definition | 6 | Declares BuildingBlocks and NetJSON dependencies. |
@@ -30,8 +31,15 @@ The NetJSON module exposes NetJSON through ThunderPropagator's common serializer
 
 | Type | Kind | Summary | Inherits/implements | Key members |
 |---|---|---|---|---|
+| `DependencyInjection` | Static class | Adds NetJSON format services to an `IServiceCollection`. | — | `AddNetJsonFormatSerializer` |
 | `NetJsonFormatSerializer` | Sealed class | JSON adapter using ID `3` and `application/json`. | `IFormatSerializer`, `IFormatDeserializer` | `Serialize`, `SerializeToBytes`, `Deserialize` |
 | `NetJsonHelper` | Static class | Configurable NetJSON extension API. | — | `ToNetJson*`, `FromNetJson*` |
+
+### DependencyInjection
+
+- Namespace: `ThunderPropagator.FormatSerializers.NetJson`
+- `AddNetJsonFormatSerializer(IServiceCollection)` rejects a null collection, registers `NetJsonFormatSerializer` for both format interfaces, and returns the original collection.
+- Call it once while composing application services; the extension mutates the supplied service collection.
 
 ### NetJsonFormatSerializer
 
@@ -66,7 +74,7 @@ Prefer text APIs when the transport already handles UTF-8. Byte and Base64 helpe
 
 | Package | Version | Description | Links |
 |---|---:|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.111` | Shared serializer contracts, attributes, telemetry, and sensitive-data support. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
+| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | Shared serializer contracts, attributes, telemetry, and sensitive-data support. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
 | `NetJSON` | `1.4.5` | High-performance .NET JSON serializer. | [NuGet](https://www.nuget.org/packages/NetJSON/1.4.5) |
 
 ## Diagrams

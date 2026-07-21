@@ -22,6 +22,7 @@ The XML module wraps the .NET `XmlSerializer` behind ThunderPropagator's format 
 | File | Primary type(s) | LOC (approx.) | Responsibility |
 |---|---|---:|---|
 | `AssemblyInfo.cs` | Assembly attributes | 3 | Exposes internals for tests and dynamic proxies. |
+| `DependencyInjection.cs` | `DependencyInjection` | 20 | Registers the serializer and deserializer implementations. |
 | `XmlFormatSerializer.cs` | `XmlFormatSerializer` | 57 | Implements common format contracts. |
 | `XmlHelper.cs` | `XmlHelper` | 106 | Caches `XmlSerializer` instances and provides conversion extensions. |
 | Project file | Package definition | 5 | Declares the BuildingBlocks dependency. |
@@ -30,8 +31,15 @@ The XML module wraps the .NET `XmlSerializer` behind ThunderPropagator's format 
 
 | Type | Kind | Summary | Inherits/implements | Key members |
 |---|---|---|---|---|
+| `DependencyInjection` | Static class | Adds XML format services to an `IServiceCollection`. | — | `AddXmlFormatSerializer` |
 | `XmlFormatSerializer` | Sealed class | XML adapter using ID `6` and `application/xml`. | `IFormatSerializer`, `IFormatDeserializer` | `Serialize`, `SerializeToBytes`, `Deserialize` |
 | `XmlHelper` | Static class | XML text, byte, and Base64 conversion API. | — | `ToXml*`, `FromXml*` |
+
+### DependencyInjection
+
+- Namespace: `ThunderPropagator.FormatSerializers.Xml`
+- `AddXmlFormatSerializer(IServiceCollection)` rejects a null collection, registers `XmlFormatSerializer` for both format interfaces, and returns the original collection.
+- Invoke it during service composition before resolving the format registry.
 
 ### XmlFormatSerializer
 
@@ -65,7 +73,7 @@ Serializer caching avoids repeated dynamic serializer construction. The cache re
 
 | Package | Version | Description | Links |
 |---|---:|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.111` | Common serializer contracts, telemetry, and sensitive-data behavior. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
+| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | Common serializer contracts, telemetry, and sensitive-data behavior. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
 | `.NET XmlSerializer` | .NET 8–10 | Framework XML serialization implementation. | [API documentation](https://learn.microsoft.com/dotnet/api/system.xml.serialization.xmlserializer) |
 
 ## Diagrams
