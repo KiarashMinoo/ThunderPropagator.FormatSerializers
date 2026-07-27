@@ -1,115 +1,137 @@
-# TOON Serializer
+# Toon
 
 ## Contents
 
 - [Overview](#overview)
 - [Files](#files)
-- [Types and members](#types-and-members)
-- [Serialization and contracts](#serialization-and-contracts)
-- [Validation and constraints](#validation-and-constraints)
-- [Performance notes](#performance-notes)
-- [Package dependencies](#package-dependencies)
+- [Types and Members](#types-and-members)
+- [Serialization and Contracts](#serialization-and-contracts)
+- [Validation and Constraints](#validation-and-constraints)
+- [Package Dependencies](#package-dependencies)
 - [Diagrams](#diagrams)
 - [Examples](#examples)
-- [See also](#see-also)
+- [See Also](#see-also)
 
 ## Overview
 
-The TOON module integrates ToonNet's Token-Oriented Object Notation encoding with the common ThunderPropagator serializer contracts. It offers text, UTF-8 byte, and Base64 representations and derives its JSON serializer configuration from BuildingBlocks so existing JSON metadata remains effective.
+The **Toon** area groups 3 documented types, including `DependencyInjection`, `ToonFormatSerializer`, `ToonHelper`. It provides the contracts and implementation used by this part of ThunderPropagator.FormatSerializers.
 
 ## Files
 
-| File | Primary type(s) | LOC (approx.) | Responsibility |
+| File | Primary type(s)/symbol(s) | LOC (approx.) | Responsibility |
 |---|---|---:|---|
-| `AssemblyInfo.cs` | Assembly attributes | 3 | Exposes internals for tests and dynamic proxies. |
-| `DependencyInjection.cs` | `DependencyInjection` | 20 | Registers the serializer and deserializer implementations. |
-| `ToonFormatSerializer.cs` | `ToonFormatSerializer` | 58 | Implements the common format contracts. |
-| `ToonHelper.cs` | `ToonHelper` | 101 | Provides configurable TOON conversion extensions. |
-| Project file | Package definition | 6 | Declares BuildingBlocks and ToonNet dependencies. |
+| `AssemblyInfo.cs` | — | 4 | Contains the assembly info implementation or configuration. |
+| `DependencyInjection.cs` | `DependencyInjection` | 22 | Defines DependencyInjection and its related behavior. |
+| `ThunderPropagator.FormatSerializers.Toon.csproj` | — | 8 | Defines project build targets, dependencies, and package metadata. |
+| `ToonFormatSerializer.cs` | `ToonFormatSerializer` | 71 | Defines ToonFormatSerializer and its related behavior. |
+| `ToonHelper.cs` | `ToonHelper` | 106 | Defines ToonHelper and its related behavior. |
 
-## Types and members
+## Types and Members
 
-| Type | Kind | Summary | Inherits/implements | Key members |
+| Type | Kind | Summary | Inherits/Implements | Key Members |
 |---|---|---|---|---|
-| `DependencyInjection` | Static class | Adds TOON format services to an `IServiceCollection`. | — | `AddToonFormatSerializer` |
-| `ToonFormatSerializer` | Sealed class | TOON adapter using ID `8` and `text/toon`. | `IFormatSerializer`, `IFormatDeserializer` | `Serialize`, `SerializeToBytes`, `Deserialize` |
-| `ToonHelper` | Static class | Direct text, UTF-8 byte, and Base64 conversion API. | — | `ToToon*`, `FromToon*` |
+| [`DependencyInjection`](#dependencyinjection) | class | Extension methods for registering ThunderPropagator BuildingBlocks services. | — | `AddToonFormatSerializer(…)` |
+| [`ToonFormatSerializer`](#toonformatserializer) | class | and implementation backed by Toon-CSharp. String representations are Base64-encoded Toon bytes. | `IFormatSerializer, IFormatDeserializer` | `SerializerType`, `MediaType` |
+| [`ToonHelper`](#toonhelper) | class | Represents the ToonHelper class. | — | — |
 
 ### DependencyInjection
 
-- Namespace: `ThunderPropagator.FormatSerializers.Toon`
-- `AddToonFormatSerializer(IServiceCollection)` rejects a null collection, registers `ToonFormatSerializer` for both format interfaces, and returns the original collection.
-- Register it while configuring the application service collection.
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Toon`
+- **Inherits/implements:** None declared
+- **Attributes:** None detected
+- **Key members:** `AddToonFormatSerializer(…)`
+- **Summary:** Extension methods for registering ThunderPropagator BuildingBlocks services.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
 
-### ToonFormatSerializer
+**Usage recipe**
 
-- `Serialize<T>` returns TOON text; `SerializeToBytes<T>` returns UTF-8 TOON.
-- `Deserialize<T>` accepts text or UTF-8 bytes and returns `default` for blank or empty input.
-- The adapter is stateless and delegates configuration to the helper defaults.
-
-### ToonHelper
-
-- `ToToon<T>` accepts a `Func<ToonOptions, ToonOptions>` configuration callback.
-- `ToToonBytes<T>` and `ToToonBase64<T>` wrap the encoded text.
-- `FromToon<T>` accepts a separate `Func<ToonDecodeOptions, ToonDecodeOptions>` callback.
-- Byte and Base64 deserialization return `default` for empty input.
-- Default `ToonOptions.SerializerOptions` come from `JsonHelper` and are adjusted for the serialized type.
-- Exceptions are converted to the shared `ExceptionInfo` representation before encoding.
+```csharp
+// Resolve DependencyInjection from the configured service container or construct it with its declared dependencies.
+```
 
 [↑ Back to top](#contents)
 
-## Serialization and contracts
+### ToonFormatSerializer
 
-The canonical contract is TOON text. Byte payloads are UTF-8, and Base64 payloads encode those UTF-8 bytes. Encoding and decoding options are distinct types, so callers should configure the correct callback for each direction.
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Toon`
+- **Inherits/implements:** `IFormatSerializer, IFormatDeserializer`
+- **Attributes:** None detected
+- **Key members:** `SerializerType`, `MediaType`
+- **Summary:** and implementation backed by Toon-CSharp. String representations are Base64-encoded Toon bytes.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
 
-## Validation and constraints
+**Usage recipe**
 
-Blank Base64 or empty byte input produces `default`. Malformed TOON, incompatible models, or malformed Base64 surface ToonNet or framework exceptions. Because JSON serializer options influence model handling, review polymorphism and naming settings for externally supplied data.
+```csharp
+// Resolve ToonFormatSerializer from the configured service container or construct it with its declared dependencies.
+```
 
-## Performance notes
+[↑ Back to top](#contents)
 
-Use the text representation when possible; byte and Base64 variants add encoding allocations. Configuration callbacks create per-call option objects, which avoids shared mutable settings but may matter in very hot paths.
+### ToonHelper
 
-## Package dependencies
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Toon`
+- **Inherits/implements:** None declared
+- **Attributes:** None detected
+- **Key members:** Refer to the API surface in the source package
+- **Summary:** Represents the ToonHelper class.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
+
+**Usage recipe**
+
+```csharp
+// Resolve ToonHelper from the configured service container or construct it with its declared dependencies.
+```
+
+[↑ Back to top](#contents)
+
+## Serialization and Contracts
+
+Serialization behavior is part of the public wire or persistence contract in this area. Preserve field names, ordering rules, content negotiation, and backward-compatibility expectations when changing these types.
+
+## Validation and Constraints
+
+Inputs are validated at component boundaries. Callers should provide non-null required values and handle domain or argument exceptions without retrying invalid requests unchanged.
+
+## Package Dependencies
 
 | Package | Version | Description | Links |
-|---|---:|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | Common serializer contracts, JSON options, telemetry, and exception models. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
-| `ToonNet` | `1.0.4` | TOON encoder and decoder for .NET. | [NuGet](https://www.nuget.org/packages/ToonNet/1.0.4) |
+|---|---|---|---|
+| `MessagePack` | `3.1.8` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/MessagePack) |
+| `MessagePackAnalyzer` | `3.1.8` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/MessagePackAnalyzer) |
+| `NetJSON` | `1.4.5` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/NetJSON) |
+| `protobuf-net` | `3.2.56` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/protobuf-net) |
+| `ToonNet` | `1.0.4` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/ToonNet) |
+| `YamlDotNet` | `18.1.0` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/YamlDotNet) |
 
 ## Diagrams
 
-### Encoding flow
+### Component overview
 
 ```mermaid
-sequenceDiagram
-    participant App
-    participant Helper as ToonHelper
-    participant Json as JsonHelper options
-    participant Codec as ToonNet
-    App->>Helper: ToToon(value, configure)
-    Helper->>Json: Resolve options for type
-    Json-->>Helper: JsonSerializerOptions
-    Helper->>Codec: Encode(value, options)
-    Codec-->>App: TOON text
+graph TD
+  Current["Toon"]
+  Current --> T0["DependencyInjection"]
+  Current --> T1["ToonFormatSerializer"]
+  Current --> T2["ToonHelper"]
 ```
 
-TOON encoding reuses the repository's JSON contract configuration before calling ToonNet.
+The diagram shows the direct components documented by the **Toon** area.
 
 ## Examples
 
-```csharp
-using ThunderPropagator.FormatSerializers.Toon;
+Start with `DependencyInjection` as the primary entry point for this folder, then follow its linked contracts and collaborators.
 
-var toon = order.ToToon();
-var restored = toon.FromToon<Order>();
-var transportValue = order.ToToonBase64();
-```
-
-## See also
+## See Also
 
 - [Documentation home](../README.md)
-- [NetJSON](../NetJson/README.md)
-- [YAML](../Yaml/README.md)
+- [MessagePack](../MessagePack/README.md)
+- [NetJson](../NetJson/README.md)
+- [Protobuf](../Protobuf/README.md)
+- [Xml](../Xml/README.md)
+- [Yaml](../Yaml/README.md)
 
 [↑ Back to top](#contents)
