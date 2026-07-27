@@ -1,118 +1,142 @@
-# XML Serializer
+# Xml
 
 ## Contents
 
 - [Overview](#overview)
 - [Files](#files)
-- [Types and members](#types-and-members)
-- [Serialization and contracts](#serialization-and-contracts)
-- [Validation and constraints](#validation-and-constraints)
-- [Performance notes](#performance-notes)
-- [Package dependencies](#package-dependencies)
+- [Types and Members](#types-and-members)
+- [Serialization and Contracts](#serialization-and-contracts)
+- [Validation and Constraints](#validation-and-constraints)
+- [Performance Notes](#performance-notes)
+- [Package Dependencies](#package-dependencies)
 - [Diagrams](#diagrams)
 - [Examples](#examples)
-- [See also](#see-also)
+- [See Also](#see-also)
 
 ## Overview
 
-The XML module wraps the .NET `XmlSerializer` behind ThunderPropagator's format contracts and direct extension methods. It provides XML text, UTF-8 bytes without a byte-order mark, and Base64, while caching serializers and applying shared telemetry and sensitive-data transformations.
+The **Xml** area groups 3 documented types, including `DependencyInjection`, `XmlFormatSerializer`, `XmlHelper`. It provides the contracts and implementation used by this part of ThunderPropagator.FormatSerializers.
 
 ## Files
 
-| File | Primary type(s) | LOC (approx.) | Responsibility |
+| File | Primary type(s)/symbol(s) | LOC (approx.) | Responsibility |
 |---|---|---:|---|
-| `AssemblyInfo.cs` | Assembly attributes | 3 | Exposes internals for tests and dynamic proxies. |
-| `DependencyInjection.cs` | `DependencyInjection` | 20 | Registers the serializer and deserializer implementations. |
-| `XmlFormatSerializer.cs` | `XmlFormatSerializer` | 57 | Implements common format contracts. |
-| `XmlHelper.cs` | `XmlHelper` | 106 | Caches `XmlSerializer` instances and provides conversion extensions. |
-| Project file | Package definition | 5 | Declares the BuildingBlocks dependency. |
+| `AssemblyInfo.cs` | — | 4 | Contains the assembly info implementation or configuration. |
+| `DependencyInjection.cs` | `DependencyInjection` | 22 | Defines DependencyInjection and its related behavior. |
+| `ThunderPropagator.FormatSerializers.Xml.csproj` | — | 7 | Defines project build targets, dependencies, and package metadata. |
+| `XmlFormatSerializer.cs` | `XmlFormatSerializer` | 70 | Defines XmlFormatSerializer and its related behavior. |
+| `XmlHelper.cs` | `XmlHelper` | 115 | Defines XmlHelper and its related behavior. |
 
-## Types and members
+## Types and Members
 
-| Type | Kind | Summary | Inherits/implements | Key members |
+| Type | Kind | Summary | Inherits/Implements | Key Members |
 |---|---|---|---|---|
-| `DependencyInjection` | Static class | Adds XML format services to an `IServiceCollection`. | — | `AddXmlFormatSerializer` |
-| `XmlFormatSerializer` | Sealed class | XML adapter using ID `6` and `application/xml`. | `IFormatSerializer`, `IFormatDeserializer` | `Serialize`, `SerializeToBytes`, `Deserialize` |
-| `XmlHelper` | Static class | XML text, byte, and Base64 conversion API. | — | `ToXml*`, `FromXml*` |
+| [`DependencyInjection`](#dependencyinjection) | class | Extension methods for registering ThunderPropagator BuildingBlocks services. | — | `AddXmlFormatSerializer(…)` |
+| [`XmlFormatSerializer`](#xmlformatserializer) | class | and implementation backed by System.Xml.Serialization . | `IFormatSerializer, IFormatDeserializer` | `SerializerType`, `MediaType` |
+| [`XmlHelper`](#xmlhelper) | class | Represents the XmlHelper class. | — | — |
 
 ### DependencyInjection
 
-- Namespace: `ThunderPropagator.FormatSerializers.Xml`
-- `AddXmlFormatSerializer(IServiceCollection)` rejects a null collection, registers `XmlFormatSerializer` for both format interfaces, and returns the original collection.
-- Invoke it during service composition before resolving the format registry.
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Xml`
+- **Inherits/implements:** None declared
+- **Attributes:** None detected
+- **Key members:** `AddXmlFormatSerializer(…)`
+- **Summary:** Extension methods for registering ThunderPropagator BuildingBlocks services.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
 
-### XmlFormatSerializer
+**Usage recipe**
 
-- `Serialize<T>` returns XML text; `SerializeToBytes<T>` returns UTF-8 XML.
-- `Deserialize<T>` accepts text or bytes and returns `default` for empty input.
-- The adapter is stateless and uses `XmlHelper` for all operations.
-
-### XmlHelper
-
-- `ToXml<T>`, `ToXmlBytes<T>`, and `ToXmlBase64<T>` provide the three transport forms.
-- `FromXml<T>`, `FromXmlBytes<T>`, and `FromXmlBase64<T>` restore typed objects.
-- A process-wide `ConcurrentDictionary<Type, XmlSerializer>` amortizes serializer construction and is safe for concurrent lookups.
-- UTF-8 byte output explicitly omits the BOM.
-- Sensitive members are encrypted temporarily during serialization and decrypted after deserialization.
+```csharp
+// Resolve DependencyInjection from the configured service container or construct it with its declared dependencies.
+```
 
 [↑ Back to top](#contents)
 
-## Serialization and contracts
+### XmlFormatSerializer
 
-Models follow `System.Xml.Serialization` rules and may customize the contract with attributes such as `[XmlRoot]`, `[XmlElement]`, and `[XmlAttribute]`. Base64 is only a transport wrapper around the UTF-8 XML bytes.
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Xml`
+- **Inherits/implements:** `IFormatSerializer, IFormatDeserializer`
+- **Attributes:** None detected
+- **Key members:** `SerializerType`, `MediaType`
+- **Summary:** and implementation backed by System.Xml.Serialization .
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
 
-## Validation and constraints
+**Usage recipe**
 
-`XmlSerializer` generally requires a public parameterless constructor and serializable public members. Blank strings and empty byte arrays return `default`; malformed XML, incompatible contracts, and malformed Base64 surface exceptions.
+```csharp
+// Resolve XmlFormatSerializer from the configured service container or construct it with its declared dependencies.
+```
 
-## Performance notes
+[↑ Back to top](#contents)
 
-Serializer caching avoids repeated dynamic serializer construction. The cache retains one serializer per encountered runtime type for the process lifetime. Use direct XML text or bytes instead of Base64 where the transport permits.
+### XmlHelper
 
-## Package dependencies
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Xml`
+- **Inherits/implements:** None declared
+- **Attributes:** None detected
+- **Key members:** Refer to the API surface in the source package
+- **Summary:** Represents the XmlHelper class.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
+
+**Usage recipe**
+
+```csharp
+// Resolve XmlHelper from the configured service container or construct it with its declared dependencies.
+```
+
+[↑ Back to top](#contents)
+
+## Serialization and Contracts
+
+Serialization behavior is part of the public wire or persistence contract in this area. Preserve field names, ordering rules, content negotiation, and backward-compatibility expectations when changing these types.
+
+## Validation and Constraints
+
+Inputs are validated at component boundaries. Callers should provide non-null required values and handle domain or argument exceptions without retrying invalid requests unchanged.
+
+## Performance Notes
+
+This area contains performance-sensitive constructs such as pooled buffers, spans, asynchronous value types, or concurrent collections. Avoid unnecessary allocations and blocking calls on streaming or message-processing paths.
+
+## Package Dependencies
 
 | Package | Version | Description | Links |
-|---|---:|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | Common serializer contracts, telemetry, and sensitive-data behavior. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
-| `.NET XmlSerializer` | .NET 8–10 | Framework XML serialization implementation. | [API documentation](https://learn.microsoft.com/dotnet/api/system.xml.serialization.xmlserializer) |
+|---|---|---|---|
+| `MessagePack` | `3.1.8` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/MessagePack) |
+| `MessagePackAnalyzer` | `3.1.8` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/MessagePackAnalyzer) |
+| `NetJSON` | `1.4.5` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/NetJSON) |
+| `protobuf-net` | `3.2.56` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/protobuf-net) |
+| `ToonNet` | `1.0.4` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/ToonNet) |
+| `YamlDotNet` | `18.1.0` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/YamlDotNet) |
 
 ## Diagrams
 
-### Cached serializer flow
+### Component overview
 
 ```mermaid
-graph LR
-    Type[Model type] --> Cache{Serializer cached?}
-    Cache -->|No| Create[Create XmlSerializer]
-    Create --> Store[(Concurrent cache)]
-    Cache -->|Yes| Store
-    Store --> Serialize[Serialize or deserialize]
-    Serialize --> XML[XML text / UTF-8 bytes]
+graph TD
+  Current["Xml"]
+  Current --> T0["DependencyInjection"]
+  Current --> T1["XmlFormatSerializer"]
+  Current --> T2["XmlHelper"]
 ```
 
-Each model type shares a cached `XmlSerializer` across subsequent operations.
+The diagram shows the direct components documented by the **Xml** area.
 
 ## Examples
 
-```csharp
-using System.Xml.Serialization;
-using ThunderPropagator.FormatSerializers.Xml;
+Start with `DependencyInjection` as the primary entry point for this folder, then follow its linked contracts and collaborators.
 
-[XmlRoot("order")]
-public sealed class Order
-{
-    [XmlAttribute("id")]
-    public int Id { get; set; }
-}
-
-var xml = new Order { Id = 42 }.ToXml();
-var restored = xml.FromXml<Order>();
-```
-
-## See also
+## See Also
 
 - [Documentation home](../README.md)
-- [NetJSON](../NetJson/README.md)
-- [YAML](../Yaml/README.md)
+- [MessagePack](../MessagePack/README.md)
+- [NetJson](../NetJson/README.md)
+- [Protobuf](../Protobuf/README.md)
+- [Toon](../Toon/README.md)
+- [Yaml](../Yaml/README.md)
 
 [↑ Back to top](#contents)

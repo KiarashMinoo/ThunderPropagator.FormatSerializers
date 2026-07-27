@@ -1,115 +1,137 @@
-# NetJSON Serializer
+# NetJson
 
 ## Contents
 
 - [Overview](#overview)
 - [Files](#files)
-- [Types and members](#types-and-members)
-- [Serialization and contracts](#serialization-and-contracts)
-- [Validation and constraints](#validation-and-constraints)
-- [Performance notes](#performance-notes)
-- [Package dependencies](#package-dependencies)
+- [Types and Members](#types-and-members)
+- [Serialization and Contracts](#serialization-and-contracts)
+- [Validation and Constraints](#validation-and-constraints)
+- [Package Dependencies](#package-dependencies)
 - [Diagrams](#diagrams)
 - [Examples](#examples)
-- [See also](#see-also)
+- [See Also](#see-also)
 
 ## Overview
 
-The NetJSON module exposes NetJSON through ThunderPropagator's common serializer interfaces and direct extension methods. JSON defaults to camel case, honors the BuildingBlocks `JsonSerializationAttribute`, converts exceptions to `ExceptionInfo`, and integrates telemetry and sensitive-data protection.
+The **NetJson** area groups 3 documented types, including `DependencyInjection`, `NetJsonFormatSerializer`, `NetJsonHelper`. It provides the contracts and implementation used by this part of ThunderPropagator.FormatSerializers.
 
 ## Files
 
-| File | Primary type(s) | LOC (approx.) | Responsibility |
+| File | Primary type(s)/symbol(s) | LOC (approx.) | Responsibility |
 |---|---|---:|---|
-| `AssemblyInfo.cs` | Assembly attributes | 3 | Exposes internals for testing and proxies. |
-| `DependencyInjection.cs` | `DependencyInjection` | 20 | Registers the serializer and deserializer implementations. |
-| `NetJsonFormatSerializer.cs` | `NetJsonFormatSerializer` | 57 | Implements the common format contracts. |
-| `NetJsonHelper.cs` | `NetJsonHelper` | 137 | Provides JSON, UTF-8 byte, Base64, and runtime-type helpers. |
-| Project file | Package definition | 6 | Declares BuildingBlocks and NetJSON dependencies. |
+| `AssemblyInfo.cs` | — | 4 | Contains the assembly info implementation or configuration. |
+| `DependencyInjection.cs` | `DependencyInjection` | 22 | Defines DependencyInjection and its related behavior. |
+| `NetJsonFormatSerializer.cs` | `NetJsonFormatSerializer` | 70 | Defines NetJsonFormatSerializer and its related behavior. |
+| `NetJsonHelper.cs` | `NetJsonHelper` | 145 | Defines NetJsonHelper and its related behavior. |
+| `ThunderPropagator.FormatSerializers.NetJson.csproj` | — | 8 | Defines project build targets, dependencies, and package metadata. |
 
-## Types and members
+## Types and Members
 
-| Type | Kind | Summary | Inherits/implements | Key members |
+| Type | Kind | Summary | Inherits/Implements | Key Members |
 |---|---|---|---|---|
-| `DependencyInjection` | Static class | Adds NetJSON format services to an `IServiceCollection`. | — | `AddNetJsonFormatSerializer` |
-| `NetJsonFormatSerializer` | Sealed class | JSON adapter using ID `3` and `application/json`. | `IFormatSerializer`, `IFormatDeserializer` | `Serialize`, `SerializeToBytes`, `Deserialize` |
-| `NetJsonHelper` | Static class | Configurable NetJSON extension API. | — | `ToNetJson*`, `FromNetJson*` |
+| [`DependencyInjection`](#dependencyinjection) | class | Extension methods for registering ThunderPropagator BuildingBlocks services. | — | `AddNetJsonFormatSerializer(…)` |
+| [`NetJsonFormatSerializer`](#netjsonformatserializer) | class | and implementation backed by NetJSON. | `IFormatSerializer, IFormatDeserializer` | `SerializerType`, `MediaType` |
+| [`NetJsonHelper`](#netjsonhelper) | class | Represents the NetJsonHelper class. | — | — |
 
 ### DependencyInjection
 
-- Namespace: `ThunderPropagator.FormatSerializers.NetJson`
-- `AddNetJsonFormatSerializer(IServiceCollection)` rejects a null collection, registers `NetJsonFormatSerializer` for both format interfaces, and returns the original collection.
-- Call it once while composing application services; the extension mutates the supplied service collection.
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.NetJson`
+- **Inherits/implements:** None declared
+- **Attributes:** None detected
+- **Key members:** `AddNetJsonFormatSerializer(…)`
+- **Summary:** Extension methods for registering ThunderPropagator BuildingBlocks services.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
 
-### NetJsonFormatSerializer
+**Usage recipe**
 
-- `Serialize<T>` returns JSON text; `SerializeToBytes<T>` returns its UTF-8 encoding.
-- `Deserialize<T>` accepts JSON text or UTF-8 bytes and returns `default` for empty input.
-- The adapter is stateless; caller-supplied settings are created for each helper invocation.
-
-### NetJsonHelper
-
-- `ToNetJson<T>` accepts a callback that mutates and returns `NetJSONSettings`.
-- `ToNetJsonBytes<T>` and `ToNetJsonBase64<T>` wrap the UTF-8 JSON representation.
-- `FromNetJson<T>` supports generic targets; `FromNetJson(string, Type, ...)` supports runtime types.
-- `FromNetJsonBytes<T>` and `FromNetJsonBase64<T>` return `default` for empty input.
-- Defaults use camel-case property names unless a cached `JsonSerializationAttribute` disables them.
-- Exceptions serialize through `ExceptionInfo`. Other objects receive the sensitive-data encryption/reversion cycle.
+```csharp
+// Resolve DependencyInjection from the configured service container or construct it with its declared dependencies.
+```
 
 [↑ Back to top](#contents)
 
-## Serialization and contracts
+### NetJsonFormatSerializer
 
-The text contract is JSON and the byte contract is UTF-8 JSON. Base64 helpers encode those UTF-8 bytes. Settings callbacks should return the provided settings object after configuration.
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.NetJson`
+- **Inherits/implements:** `IFormatSerializer, IFormatDeserializer`
+- **Attributes:** None detected
+- **Key members:** `SerializerType`, `MediaType`
+- **Summary:** and implementation backed by NetJSON.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
 
-## Validation and constraints
+**Usage recipe**
 
-Blank Base64 and JSON byte input is treated as absent. Invalid JSON, incompatible target types, and malformed Base64 surface the underlying exceptions. A settings callback can alter naming and other NetJSON behavior for a single operation.
+```csharp
+// Resolve NetJsonFormatSerializer from the configured service container or construct it with its declared dependencies.
+```
 
-## Performance notes
+[↑ Back to top](#contents)
 
-Prefer text APIs when the transport already handles UTF-8. Byte and Base64 helpers add encoding or encoding-plus-Base64 allocations. Avoid sharing a mutable `NetJSONSettings` object across concurrent operations.
+### NetJsonHelper
 
-## Package dependencies
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.NetJson`
+- **Inherits/implements:** None declared
+- **Attributes:** None detected
+- **Key members:** Refer to the API surface in the source package
+- **Summary:** Represents the NetJsonHelper class.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
+
+**Usage recipe**
+
+```csharp
+// Resolve NetJsonHelper from the configured service container or construct it with its declared dependencies.
+```
+
+[↑ Back to top](#contents)
+
+## Serialization and Contracts
+
+Serialization behavior is part of the public wire or persistence contract in this area. Preserve field names, ordering rules, content negotiation, and backward-compatibility expectations when changing these types.
+
+## Validation and Constraints
+
+Inputs are validated at component boundaries. Callers should provide non-null required values and handle domain or argument exceptions without retrying invalid requests unchanged.
+
+## Package Dependencies
 
 | Package | Version | Description | Links |
-|---|---:|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | Shared serializer contracts, attributes, telemetry, and sensitive-data support. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
-| `NetJSON` | `1.4.5` | High-performance .NET JSON serializer. | [NuGet](https://www.nuget.org/packages/NetJSON/1.4.5) |
+|---|---|---|---|
+| `MessagePack` | `3.1.8` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/MessagePack) |
+| `MessagePackAnalyzer` | `3.1.8` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/MessagePackAnalyzer) |
+| `NetJSON` | `1.4.5` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/NetJSON) |
+| `protobuf-net` | `3.2.56` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/protobuf-net) |
+| `ToonNet` | `1.0.4` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/ToonNet) |
+| `YamlDotNet` | `18.1.0` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/YamlDotNet) |
 
 ## Diagrams
 
-### Representation flow
+### Component overview
 
 ```mermaid
-graph LR
-    Object[Object] --> Helper[NetJsonHelper]
-    Settings[NetJSONSettings] --> Helper
-    Helper --> Text[JSON text]
-    Text --> Bytes[UTF-8 bytes]
-    Bytes --> Base64[Base64 text]
-    Text --> Restore[Deserialized object]
+graph TD
+  Current["NetJson"]
+  Current --> T0["DependencyInjection"]
+  Current --> T1["NetJsonFormatSerializer"]
+  Current --> T2["NetJsonHelper"]
 ```
 
-All public representations share the same configured JSON contract.
+The diagram shows the direct components documented by the **NetJson** area.
 
 ## Examples
 
-```csharp
-using ThunderPropagator.FormatSerializers.NetJson;
+Start with `DependencyInjection` as the primary entry point for this folder, then follow its linked contracts and collaborators.
 
-var json = order.ToNetJson(settings =>
-{
-    settings.CamelCase = true;
-    return settings;
-});
-var restored = json.FromNetJson<Order>();
-```
-
-## See also
+## See Also
 
 - [Documentation home](../README.md)
-- [TOON](../Toon/README.md)
-- [XML](../Xml/README.md)
+- [MessagePack](../MessagePack/README.md)
+- [Protobuf](../Protobuf/README.md)
+- [Toon](../Toon/README.md)
+- [Xml](../Xml/README.md)
+- [Yaml](../Yaml/README.md)
 
 [↑ Back to top](#contents)

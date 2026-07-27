@@ -1,118 +1,137 @@
-# Protobuf Serializer
+# Protobuf
 
 ## Contents
 
 - [Overview](#overview)
 - [Files](#files)
-- [Types and members](#types-and-members)
-- [Serialization and contracts](#serialization-and-contracts)
-- [Validation and constraints](#validation-and-constraints)
-- [Performance notes](#performance-notes)
-- [Package dependencies](#package-dependencies)
+- [Types and Members](#types-and-members)
+- [Serialization and Contracts](#serialization-and-contracts)
+- [Validation and Constraints](#validation-and-constraints)
+- [Package Dependencies](#package-dependencies)
 - [Diagrams](#diagrams)
 - [Examples](#examples)
-- [See also](#see-also)
+- [See Also](#see-also)
 
 ## Overview
 
-The Protobuf module adapts protobuf-net to the ThunderPropagator serializer registry. It provides native stream and byte operations plus Base64 text transport, with shared telemetry and sensitive-data processing around the protobuf contract.
+The **Protobuf** area groups 3 documented types, including `DependencyInjection`, `ProtobufFormatSerializer`, `ProtobufHelper`. It provides the contracts and implementation used by this part of ThunderPropagator.FormatSerializers.
 
 ## Files
 
-| File | Primary type(s) | LOC (approx.) | Responsibility |
+| File | Primary type(s)/symbol(s) | LOC (approx.) | Responsibility |
 |---|---|---:|---|
-| `AssemblyInfo.cs` | Assembly attributes | 3 | Exposes internals for tests and dynamic proxies. |
-| `DependencyInjection.cs` | `DependencyInjection` | 20 | Registers the serializer and deserializer implementations. |
-| `ProtobufFormatSerializer.cs` | `ProtobufFormatSerializer` | 58 | Implements common serializer and deserializer contracts. |
-| `ProtobufHelper.cs` | `ProtobufHelper` | 69 | Provides stream, byte-array, and Base64 extensions. |
-| Project file | Package definition | 6 | Declares BuildingBlocks and protobuf-net dependencies. |
+| `AssemblyInfo.cs` | — | 4 | Contains the assembly info implementation or configuration. |
+| `DependencyInjection.cs` | `DependencyInjection` | 22 | Defines DependencyInjection and its related behavior. |
+| `ProtobufFormatSerializer.cs` | `ProtobufFormatSerializer` | 71 | Defines ProtobufFormatSerializer and its related behavior. |
+| `ProtobufHelper.cs` | `ProtobufHelper` | 75 | Defines ProtobufHelper and its related behavior. |
+| `ThunderPropagator.FormatSerializers.Protobuf.csproj` | — | 8 | Defines project build targets, dependencies, and package metadata. |
 
-## Types and members
+## Types and Members
 
-| Type | Kind | Summary | Inherits/implements | Key members |
+| Type | Kind | Summary | Inherits/Implements | Key Members |
 |---|---|---|---|---|
-| `DependencyInjection` | Static class | Adds protobuf format services to an `IServiceCollection`. | — | `AddProtobufFormatSerializer` |
-| `ProtobufFormatSerializer` | Sealed class | Protobuf adapter using ID `4` and `application/x-protobuf`. | `IFormatSerializer`, `IFormatDeserializer` | `Serialize`, `SerializeToBytes`, `Deserialize` |
-| `ProtobufHelper` | Static class | Direct protobuf-net conversion extensions. | — | `ToProtobuf*`, `FromProtobuf*` |
+| [`DependencyInjection`](#dependencyinjection) | class | Extension methods for registering ThunderPropagator BuildingBlocks services. | — | `AddProtobufFormatSerializer(…)` |
+| [`ProtobufFormatSerializer`](#protobufformatserializer) | class | and implementation backed by protobuf-net. String representations are Base64-encoded protobuf bytes. | `IFormatSerializer, IFormatDeserializer` | `SerializerType`, `MediaType` |
+| [`ProtobufHelper`](#protobufhelper) | class | Represents the ProtobufHelper class. | — | — |
 
 ### DependencyInjection
 
-- Namespace: `ThunderPropagator.FormatSerializers.Protobuf`
-- `AddProtobufFormatSerializer(IServiceCollection)` rejects a null collection, registers `ProtobufFormatSerializer` for both format interfaces, and returns the original collection.
-- Use it during startup before resolving serializers from the BuildingBlocks registry.
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Protobuf`
+- **Inherits/implements:** None declared
+- **Attributes:** None detected
+- **Key members:** `AddProtobufFormatSerializer(…)`
+- **Summary:** Extension methods for registering ThunderPropagator BuildingBlocks services.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
 
-### ProtobufFormatSerializer
+**Usage recipe**
 
-- `Serialize<T>` returns Base64-encoded protobuf bytes.
-- `SerializeToBytes<T>` returns the native protobuf payload.
-- `Deserialize<T>` accepts Base64 or bytes and returns `default` for empty input.
-- Instances contain no mutable state.
-
-### ProtobufHelper
-
-- `ToProtobuf<T>` produces a readable `MemoryStream` positioned after the serialized payload.
-- `ToProtobufBytes<T>` and `ToProtobufBase64<T>` produce portable representations.
-- `FromProtobuf<T>` accepts a stream or byte array; `FromProtobufBase64<T>` decodes text.
-- Serialization encrypts sensitive members temporarily and always restores them; deserialization decrypts sensitive members in the result.
+```csharp
+// Resolve DependencyInjection from the configured service container or construct it with its declared dependencies.
+```
 
 [↑ Back to top](#contents)
 
-## Serialization and contracts
+### ProtobufFormatSerializer
 
-Models must satisfy protobuf-net's serializable contract, typically through `[ProtoContract]` and `[ProtoMember]` or a configured runtime model. The string contract is Base64, while the byte and stream contracts are native protobuf.
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Protobuf`
+- **Inherits/implements:** `IFormatSerializer, IFormatDeserializer`
+- **Attributes:** None detected
+- **Key members:** `SerializerType`, `MediaType`
+- **Summary:** and implementation backed by protobuf-net. String representations are Base64-encoded protobuf bytes.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
 
-## Validation and constraints
+**Usage recipe**
 
-The common adapter handles empty input as `default`. Direct helpers surface malformed Base64, incompatible schemas, truncated payloads, and stream errors. Schema evolution should preserve field numbers and compatible wire types.
+```csharp
+// Resolve ProtobufFormatSerializer from the configured service container or construct it with its declared dependencies.
+```
 
-## Performance notes
+[↑ Back to top](#contents)
 
-Prefer stream or byte methods for binary transports. Base64 adds size and allocation overhead. Reuse stable protobuf models and avoid concurrently serializing the same mutable object when sensitive-data members are present.
+### ProtobufHelper
 
-## Package dependencies
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Protobuf`
+- **Inherits/implements:** None declared
+- **Attributes:** None detected
+- **Key members:** Refer to the API surface in the source package
+- **Summary:** Represents the ProtobufHelper class.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
+
+**Usage recipe**
+
+```csharp
+// Resolve ProtobufHelper from the configured service container or construct it with its declared dependencies.
+```
+
+[↑ Back to top](#contents)
+
+## Serialization and Contracts
+
+Serialization behavior is part of the public wire or persistence contract in this area. Preserve field names, ordering rules, content negotiation, and backward-compatibility expectations when changing these types.
+
+## Validation and Constraints
+
+Inputs are validated at component boundaries. Callers should provide non-null required values and handle domain or argument exceptions without retrying invalid requests unchanged.
+
+## Package Dependencies
 
 | Package | Version | Description | Links |
-|---|---:|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | Shared format contracts, telemetry, helpers, and sensitive-data behavior. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
-| `protobuf-net` | `3.2.56` | Protocol Buffers serializer for .NET. | [NuGet](https://www.nuget.org/packages/protobuf-net/3.2.56) · [Repository](https://github.com/protobuf-net/protobuf-net) |
+|---|---|---|---|
+| `MessagePack` | `3.1.8` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/MessagePack) |
+| `MessagePackAnalyzer` | `3.1.8` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/MessagePackAnalyzer) |
+| `NetJSON` | `1.4.5` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/NetJSON) |
+| `protobuf-net` | `3.2.56` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/protobuf-net) |
+| `ToonNet` | `1.0.4` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/ToonNet) |
+| `YamlDotNet` | `18.1.0` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/YamlDotNet) |
 
 ## Diagrams
 
-### Contract flow
+### Component overview
 
 ```mermaid
-graph LR
-    Model[Contract model] --> Protect[Sensitive-data transform]
-    Protect --> Codec[protobuf-net]
-    Codec --> Binary[Protobuf bytes]
-    Binary --> Base64[Base64 string]
-    Binary --> Decode[Deserialize]
-    Decode --> Model2[Restored model]
+graph TD
+  Current["Protobuf"]
+  Current --> T0["DependencyInjection"]
+  Current --> T1["ProtobufFormatSerializer"]
+  Current --> T2["ProtobufHelper"]
 ```
 
-The Base64 representation is a transport wrapper around the same protobuf bytes.
+The diagram shows the direct components documented by the **Protobuf** area.
 
 ## Examples
 
-```csharp
-using ProtoBuf;
-using ThunderPropagator.FormatSerializers.Protobuf;
+Start with `DependencyInjection` as the primary entry point for this folder, then follow its linked contracts and collaborators.
 
-[ProtoContract]
-public sealed class Order
-{
-    [ProtoMember(1)]
-    public int Id { get; set; }
-}
-
-var payload = new Order { Id = 42 }.ToProtobufBytes();
-var restored = payload.FromProtobuf<Order>();
-```
-
-## See also
+## See Also
 
 - [Documentation home](../README.md)
 - [MessagePack](../MessagePack/README.md)
-- [YAML](../Yaml/README.md)
+- [NetJson](../NetJson/README.md)
+- [Toon](../Toon/README.md)
+- [Xml](../Xml/README.md)
+- [Yaml](../Yaml/README.md)
 
 [↑ Back to top](#contents)

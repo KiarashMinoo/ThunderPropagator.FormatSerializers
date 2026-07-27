@@ -1,177 +1,221 @@
-# YAML Serializer
+# Yaml
 
 ## Contents
 
 - [Overview](#overview)
 - [Files](#files)
-- [Types and members](#types-and-members)
-- [Serialization and contracts](#serialization-and-contracts)
-- [Validation and constraints](#validation-and-constraints)
-- [Performance notes](#performance-notes)
-- [Package dependencies](#package-dependencies)
+- [Types and Members](#types-and-members)
+- [Serialization and Contracts](#serialization-and-contracts)
+- [Validation and Constraints](#validation-and-constraints)
+- [Package Dependencies](#package-dependencies)
 - [Diagrams](#diagrams)
 - [Examples](#examples)
-- [See also](#see-also)
+- [See Also](#see-also)
 
 ## Overview
 
-The YAML module provides the most extensible serializer integration in this repository. It wraps YamlDotNet with common format contracts, configurable naming and construction rules, type- and node-level extension points, UTF-8/Base64 helpers, telemetry, and sensitive-data handling.
+The **Yaml** area groups 7 documented types, including `DependencyInjection`, `YamlFormatSerializer`, `YamlHelper`, `IYamlTypeConverter`, `BaseYamlTypeConverter`. It provides the contracts and implementation used by this part of ThunderPropagator.FormatSerializers.
 
 ## Files
 
-| File | Primary type(s) | LOC (approx.) | Responsibility |
+| File | Primary type(s)/symbol(s) | LOC (approx.) | Responsibility |
 |---|---|---:|---|
-| `AssemblyInfo.cs` | Assembly attributes | 3 | Exposes internals for tests and dynamic proxies. |
-| `DependencyInjection.cs` | `DependencyInjection` | 20 | Registers the serializer and deserializer implementations. |
-| `YamlFormatSerializer.cs` | `YamlFormatSerializer` | 59 | Implements common format contracts. |
-| `YamlHelper.cs` | `YamlHelper` | 231 | Builds configured YamlDotNet serializers and exposes conversion helpers. |
-| `YamlNodeDeserializerAttribute.cs` | `YamlNodeDeserializerAttribute` | 11 | Associates a node deserializer with a model. |
-| `YamlSerializerSettings.cs` | `YamlSerializerSettings` | 22 | Holds per-operation/default YAML configuration. |
-| `YamlTypeConverter.cs` | Converter abstractions | 235 | Supplies generic and non-generic converter base classes and parsing helpers. |
-| `YamlTypeConverterAttribute.cs` | `YamlTypeConverterAttribute` | 13 | Associates a YAML type converter with a model. |
-| Project file | Package definition | 6 | Declares BuildingBlocks and YamlDotNet dependencies. |
+| `AssemblyInfo.cs` | — | 4 | Contains the assembly info implementation or configuration. |
+| `DependencyInjection.cs` | `DependencyInjection` | 22 | Defines DependencyInjection and its related behavior. |
+| `ThunderPropagator.FormatSerializers.Yaml.csproj` | — | 8 | Defines project build targets, dependencies, and package metadata. |
+| `YamlFormatSerializer.cs` | `YamlFormatSerializer` | 72 | Defines YamlFormatSerializer and its related behavior. |
+| `YamlHelper.cs` | `YamlHelper` | 237 | Defines YamlHelper and its related behavior. |
+| `YamlNodeDeserializerAttribute.cs` | `YamlNodeDeserializerAttribute` | 13 | Defines YamlNodeDeserializerAttribute and its related behavior. |
+| `YamlSerializerSettings.cs` | `YamlSerializerSettings` | 24 | Defines YamlSerializerSettings and its related behavior. |
+| `YamlTypeConverter.cs` | `IYamlTypeConverter`, `BaseYamlTypeConverter`, `YamlTypeConverter`, `YamlTypeConverter` | 243 | Defines IYamlTypeConverter, BaseYamlTypeConverter, YamlTypeConverter and its related behavior. |
+| `YamlTypeConverterAttribute.cs` | `YamlTypeConverterAttribute` | 14 | Defines YamlTypeConverterAttribute and its related behavior. |
 
-## Types and members
+## Types and Members
 
-| Type | Kind | Summary | Inherits/implements | Key members |
+| Type | Kind | Summary | Inherits/Implements | Key Members |
 |---|---|---|---|---|
-| `DependencyInjection` | Static class | Adds YAML format services to an `IServiceCollection`. | — | `AddYamlFormatSerializer` |
-| `YamlFormatSerializer` | Sealed class | YAML adapter using ID `7` and `application/yaml`. | `IFormatSerializer`, `IFormatDeserializer` | `Serialize`, `SerializeToBytes`, `Deserialize` |
-| `YamlHelper` | Static class | Configures YamlDotNet and exposes text, byte, Base64, and runtime-type methods. | — | `DefaultSerializerSettings`, `ToYaml*`, `FromYaml*` |
-| `YamlSerializerSettings` | Class | YAML serializer/deserializer options. | — | naming, resolver, converter, and construction properties |
-| `YamlTypeConverterAttribute` | Attribute | Associates an `IYamlTypeConverter` type with a model. | `Attribute` | `ConverterType` |
-| `YamlNodeDeserializerAttribute` | Attribute | Associates an `INodeDeserializer` type with a model. | `Attribute` | `NodeDeserializer` |
-| `IYamlTypeConverter<T>` | Interface | Strongly typed YAML read/write extension. | `IYamlTypeConverter` | `ReadYaml`, `WriteYaml` |
-| `BaseYamlTypeConverter` | Abstract class | Common parser/emitter helpers for custom converters. | — | `Accepts`, mapping/sequence, scalar, enum, boolean, and number helpers |
-| `YamlTypeConverter` | Abstract class | Non-generic object converter base. | `BaseYamlTypeConverter`, `IYamlTypeConverter` | `WriteYamlInternal`, `ReadYamlInternal` |
-| `YamlTypeConverter<T>` | Abstract class | Strongly typed converter base. | `BaseYamlTypeConverter`, `IYamlTypeConverter<T>` | `Accepts`, `WriteYamlInternal`, `ReadYamlInternal` |
+| [`DependencyInjection`](#dependencyinjection) | class | Extension methods for registering ThunderPropagator BuildingBlocks services. | — | `AddYamlFormatSerializer(…)` |
+| [`YamlFormatSerializer`](#yamlformatserializer) | class | and implementation backed by YamlDotNet. | `IFormatSerializer, IFormatDeserializer` | `SerializerType`, `MediaType` |
+| [`YamlHelper`](#yamlhelper) | class | Represents the YamlHelper class. | — | `DefaultSerializerSettings` |
+| [`IYamlTypeConverter`](#iyamltypeconverter) | interface | Represents the IYamlTypeConverter interface. | `IYamlTypeConverter` | `Accepts(…)`, `GetYamlTypeConverter(…)`, `ShiftIf(…)`, `IsMappingStart(…)`, `IsMappingEnd(…)`, `IsSequenceStart(…)` |
+| [`BaseYamlTypeConverter`](#baseyamltypeconverter) | class | Represents the BaseYamlTypeConverter class. | — | `Accepts(…)`, `GetYamlTypeConverter(…)`, `ShiftIf(…)`, `IsMappingStart(…)`, `IsMappingEnd(…)`, `IsSequenceStart(…)` |
+| [`YamlTypeConverter`](#yamltypeconverter) | class | Represents the YamlTypeConverter class. | `BaseYamlTypeConverter, IYamlTypeConverter` | `WriteYamlInternal(…)`, `ReadYamlInternal(…)`, `Accepts(…)`, `WriteYamlInternal(…)`, `ReadYamlInternal(…)` |
+| [`YamlTypeConverter`](#yamltypeconverter) | class | Represents the YamlTypeConverter class. | `BaseYamlTypeConverter, IYamlTypeConverter<T>` | `Accepts(…)`, `WriteYamlInternal(…)`, `ReadYamlInternal(…)` |
 
 ### DependencyInjection
 
-- Namespace: `ThunderPropagator.FormatSerializers.Yaml`
-- `AddYamlFormatSerializer(IServiceCollection)` rejects a null collection, registers `YamlFormatSerializer` for both format interfaces, and returns the original collection.
-- Call it during startup; operation-local or global YAML settings remain configured through `YamlHelper`.
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Yaml`
+- **Inherits/implements:** None declared
+- **Attributes:** None detected
+- **Key members:** `AddYamlFormatSerializer(…)`
+- **Summary:** Extension methods for registering ThunderPropagator BuildingBlocks services.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
 
-### YamlFormatSerializer
+**Usage recipe**
 
-- `Serialize<T>` returns YAML text; `SerializeToBytes<T>` returns UTF-8.
-- `Deserialize<T>` accepts YAML text or UTF-8 bytes and returns `default` for empty input.
-- Instances are stateless, but they read the mutable global defaults on each operation.
-
-### YamlHelper
-
-- `DefaultSerializerSettings` initially uses `CamelCaseNamingConvention`.
-- `ToYaml<T>`, `ToYamlBytes<T>`, and `ToYamlBase64<T>` accept optional per-operation settings.
-- `FromYaml<T>` supports generic targets; `FromYaml(string, Type, ...)` supports runtime types.
-- `FromYamlBytes<T>` and `FromYamlBase64<T>` support transport forms.
-- Per-operation settings take precedence over defaults. Type converters are collected from the target attribute, operation settings, and global defaults.
-- Node deserializers are collected in the same order for deserialization.
-- Sensitive members are encrypted and restored during serialization, then decrypted after deserialization.
-
-### YamlSerializerSettings
-
-| Property | Type | Default | Effect |
-|---|---|---|---|
-| `Style` | `ScalarStyle?` | `null` | Sets the default scalar style. |
-| `JsonCompatible` | `bool` | `false` | Emits JSON-compatible YAML. |
-| `IgnoreFields` | `bool` | `false` | Excludes fields. |
-| `IncludeNonPublicProperties` | `bool` | `false` | Includes non-public properties. |
-| `EnablePrivateConstructors` | `bool` | `false` | Allows private constructors. |
-| `NamingConvention` | `INamingConvention?` | global camel case | Controls member names. |
-| `EnumNamingConvention` | `INamingConvention?` | `null` | Controls enum values. |
-| `TypeResolver` | `ITypeResolver?` | `null` | Resolves runtime YAML types. |
-| `TypeConverters` | `IEnumerable<IYamlTypeConverter>?` | `null` | Adds custom value converters. |
-| `NodeDeserializers` | `IEnumerable<INodeDeserializer>?` | `null` | Adds custom node deserializers. |
-
-This class is mutable. Treat configured instances as immutable while an operation is running.
-
-### YamlTypeConverterAttribute
-
-Apply the attribute to a class, interface, struct, enum, property, or field. `ConverterType` must be constructible by `Activator.CreateInstance` and implement `IYamlTypeConverter`; invalid types fail at runtime.
-
-### YamlNodeDeserializerAttribute
-
-Apply the attribute to a class, interface, struct, enum, property, or field. `NodeDeserializer` must be constructible and implement YamlDotNet's `INodeDeserializer`.
-
-### Converter base types
-
-`BaseYamlTypeConverter` provides protected helpers for consuming mapping/sequence boundaries, reading and writing keys/scalars, delegating nested serialization, and converting enums, booleans, and generic numeric types. `YamlTypeConverter` is suitable when one implementation handles runtime types; `YamlTypeConverter<T>` automatically accepts only `T` and exposes typed abstract methods.
+```csharp
+// Resolve DependencyInjection from the configured service container or construct it with its declared dependencies.
+```
 
 [↑ Back to top](#contents)
 
-## Serialization and contracts
+### YamlFormatSerializer
 
-The canonical contract is YAML text. Byte output uses UTF-8 and Base64 wraps those bytes. Serializer settings affect both syntax and object construction, so producers and consumers should agree on naming conventions, converter registration, and resolver behavior.
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Yaml`
+- **Inherits/implements:** `IFormatSerializer, IFormatDeserializer`
+- **Attributes:** None detected
+- **Key members:** `SerializerType`, `MediaType`
+- **Summary:** and implementation backed by YamlDotNet.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
 
-## Validation and constraints
+**Usage recipe**
 
-Custom converter and node-deserializer types are instantiated reflectively and require usable parameterless constructors. Converter base classes reject content that does not begin with a mapping or sequence. Blank Base64 and empty bytes return `default`; malformed YAML and conversion failures surface exceptions.
+```csharp
+// Resolve YamlFormatSerializer from the configured service container or construct it with its declared dependencies.
+```
 
-## Performance notes
+[↑ Back to top](#contents)
 
-YamlDotNet serializer/deserializer builders are rebuilt for each operation, favoring configuration isolation over maximum throughput. Global settings are mutable and not synchronized; configure them once during startup or pass operation-local settings. Avoid concurrent serialization of the same sensitive mutable object.
+### YamlHelper
 
-## Package dependencies
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Yaml`
+- **Inherits/implements:** None declared
+- **Attributes:** None detected
+- **Key members:** `DefaultSerializerSettings`
+- **Summary:** Represents the YamlHelper class.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
+
+**Usage recipe**
+
+```csharp
+// Resolve YamlHelper from the configured service container or construct it with its declared dependencies.
+```
+
+[↑ Back to top](#contents)
+
+### IYamlTypeConverter
+
+- **Kind:** interface
+- **Namespace:** `ThunderPropagator.FormatSerializers.Yaml`
+- **Inherits/implements:** `IYamlTypeConverter`
+- **Attributes:** None detected
+- **Key members:** `Accepts(…)`, `GetYamlTypeConverter(…)`, `ShiftIf(…)`, `IsMappingStart(…)`, `IsMappingEnd(…)`, `IsSequenceStart(…)`, `IsSequenceEnd(…)`, `IsMappingStartAndShift(…)`
+- **Summary:** Represents the IYamlTypeConverter interface.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
+
+**Usage recipe**
+
+```csharp
+// Resolve IYamlTypeConverter from the configured service container or construct it with its declared dependencies.
+```
+
+[↑ Back to top](#contents)
+
+### BaseYamlTypeConverter
+
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Yaml`
+- **Inherits/implements:** None declared
+- **Attributes:** None detected
+- **Key members:** `Accepts(…)`, `GetYamlTypeConverter(…)`, `ShiftIf(…)`, `IsMappingStart(…)`, `IsMappingEnd(…)`, `IsSequenceStart(…)`, `IsSequenceEnd(…)`, `IsMappingStartAndShift(…)`
+- **Summary:** Represents the BaseYamlTypeConverter class.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
+
+**Usage recipe**
+
+```csharp
+// Resolve BaseYamlTypeConverter from the configured service container or construct it with its declared dependencies.
+```
+
+[↑ Back to top](#contents)
+
+### YamlTypeConverter
+
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Yaml`
+- **Inherits/implements:** `BaseYamlTypeConverter, IYamlTypeConverter`
+- **Attributes:** None detected
+- **Key members:** `WriteYamlInternal(…)`, `ReadYamlInternal(…)`, `Accepts(…)`, `WriteYamlInternal(…)`, `ReadYamlInternal(…)`
+- **Summary:** Represents the YamlTypeConverter class.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
+
+**Usage recipe**
+
+```csharp
+// Resolve YamlTypeConverter from the configured service container or construct it with its declared dependencies.
+```
+
+[↑ Back to top](#contents)
+
+### YamlTypeConverter
+
+- **Kind:** class
+- **Namespace:** `ThunderPropagator.FormatSerializers.Yaml`
+- **Inherits/implements:** `BaseYamlTypeConverter, IYamlTypeConverter<T>`
+- **Attributes:** None detected
+- **Key members:** `Accepts(…)`, `WriteYamlInternal(…)`, `ReadYamlInternal(…)`
+- **Summary:** Represents the YamlTypeConverter class.
+- **Thread safety:** Follow the lifetime and concurrency guarantees of the owning component; no additional guarantee is inferred.
+
+**Usage recipe**
+
+```csharp
+// Resolve YamlTypeConverter from the configured service container or construct it with its declared dependencies.
+```
+
+[↑ Back to top](#contents)
+
+## Serialization and Contracts
+
+Serialization behavior is part of the public wire or persistence contract in this area. Preserve field names, ordering rules, content negotiation, and backward-compatibility expectations when changing these types.
+
+## Validation and Constraints
+
+Inputs are validated at component boundaries. Callers should provide non-null required values and handle domain or argument exceptions without retrying invalid requests unchanged.
+
+## Package Dependencies
 
 | Package | Version | Description | Links |
-|---|---:|---|---|
-| `ThunderPropagator.BuildingBlocks` | `1.0.1-beta.114` | Common contracts, telemetry, and sensitive-data processing. | [Repository](https://github.com/KiarashMinoo/ThunderPropagator.BuildingBlocks) |
-| `YamlDotNet` | `18.1.0` | YAML parser, emitter, serializer, and extension contracts. | [NuGet](https://www.nuget.org/packages/YamlDotNet/18.1.0) · [Repository](https://github.com/aaubry/YamlDotNet) |
+|---|---|---|---|
+| `MessagePack` | `3.1.8` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/MessagePack) |
+| `MessagePackAnalyzer` | `3.1.8` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/MessagePackAnalyzer) |
+| `NetJSON` | `1.4.5` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/NetJSON) |
+| `protobuf-net` | `3.2.56` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/protobuf-net) |
+| `ToonNet` | `1.0.4` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/ToonNet) |
+| `YamlDotNet` | `18.1.0` | External dependency used by the repository. | [Registry](https://www.nuget.org/packages/YamlDotNet) |
 
 ## Diagrams
 
-### Configuration and conversion
+### Component overview
 
 ```mermaid
 graph TD
-    Model[Target model] --> Attribute{Converter attribute?}
-    Local[Operation settings] --> Builder[YamlDotNet builder]
-    Global[Default settings] --> Builder
-    Attribute --> Builder
-    Builder --> Codec[Serializer / Deserializer]
-    Codec --> YAML[YAML text]
-    YAML --> Codec
-    Codec --> Restored[Restored model]
+  Current["Yaml"]
+  Current --> T0["DependencyInjection"]
+  Current --> T1["YamlFormatSerializer"]
+  Current --> T2["YamlHelper"]
+  Current --> T3["IYamlTypeConverter"]
+  Current --> T4["BaseYamlTypeConverter"]
+  Current --> T5["YamlTypeConverter"]
+  Current --> T6["YamlTypeConverter"]
 ```
 
-Target attributes, local settings, and global defaults converge when each YamlDotNet codec is built.
-
-### Custom converter sequence
-
-```mermaid
-sequenceDiagram
-    participant Parser
-    participant Base as YamlTypeConverter<T>
-    participant Custom as Custom converter
-    Parser->>Base: ReadYaml(parser, type, root)
-    Base->>Base: Validate and shift mapping/sequence start
-    Base->>Custom: ReadYamlInternal(...)
-    Custom-->>Base: T
-    Base-->>Parser: Converted object
-```
-
-The base class validates the node boundary before delegating domain-specific parsing.
+The diagram shows the direct components documented by the **Yaml** area.
 
 ## Examples
 
-```csharp
-using ThunderPropagator.FormatSerializers.Yaml;
-using YamlDotNet.Serialization.NamingConventions;
+Start with `DependencyInjection` as the primary entry point for this folder, then follow its linked contracts and collaborators.
 
-var settings = new YamlSerializerSettings
-{
-    NamingConvention = UnderscoredNamingConvention.Instance,
-    IgnoreFields = true
-};
-
-var yaml = order.ToYaml(settings);
-var restored = yaml.FromYaml<Order>(settings);
-```
-
-## See also
+## See Also
 
 - [Documentation home](../README.md)
-- [NetJSON](../NetJson/README.md)
-- [XML](../Xml/README.md)
+- [MessagePack](../MessagePack/README.md)
+- [NetJson](../NetJson/README.md)
+- [Protobuf](../Protobuf/README.md)
+- [Toon](../Toon/README.md)
+- [Xml](../Xml/README.md)
 
 [↑ Back to top](#contents)
