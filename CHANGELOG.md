@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.6] — 2026-07-27
+
+### 📝 Documentation
+
+- rebuild repository documentation `(1e2de57)` — Codex
+
 ## [1.0.1-beta.5] — 2026-07-21
 
 ### 🚀 Features

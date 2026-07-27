@@ -1,5 +1,5 @@
-## [1.0.1-beta.5] — 2026-07-21
+## [1.0.1-beta.6] — 2026-07-27
 
-### 🚀 Features
+### 📝 Documentation
 
-- add serializer registration extensions `(f4e8a19)` — Kiarash Minoo
+- rebuild repository documentation `(1e2de57)` — Codex
