@@ -1,5 +1,9 @@
-## [1.0.1-beta.10] — 2026-07-28
+## [1.0.1-beta.11] — 2026-07-28
+
+### ⚙️ CI / Tooling
+
+- enable nuget-filter-enabled to stop publishing every platform/config package variant `(2ae2493)` — Kiarash Minoo
 
 ### 🏠 Chores
 
-- update BuildingBlocksVersion to 1.0.1-beta.122 `(223993d)` — Kiarash Minoo
+- bump BuildingBlocksVersion to 1.0.1-beta.123 `(f412f19)` — Kiarash Minoo

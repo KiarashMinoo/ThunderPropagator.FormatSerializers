@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.11] — 2026-07-28
+
+### ⚙️ CI / Tooling
+
+- enable nuget-filter-enabled to stop publishing every platform/config package variant `(2ae2493)` — Kiarash Minoo
+
+### 🏠 Chores
+
+- bump BuildingBlocksVersion to 1.0.1-beta.123 `(f412f19)` — Kiarash Minoo
+
 ## [1.0.1-beta.10] — 2026-07-28
 
 ### 🏠 Chores
