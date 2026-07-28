@@ -1,5 +1,5 @@
-## [1.0.1-beta.6] — 2026-07-27
+## [1.0.1-beta.7] — 2026-07-28
 
-### 📝 Documentation
+### 🏠 Chores
 
-- rebuild repository documentation `(1e2de57)` — Codex
+- ThunderPropagator.FormatSerializers: extract shared-props bootstrap and correct repo docs `(742cb39)` — Kiarash Minoo
