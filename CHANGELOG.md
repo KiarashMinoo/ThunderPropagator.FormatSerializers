@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.9] — 2026-07-28
+
+### 🐛 Bug Fixes
+
+- update download file URL to prevent stale cache issues in shared props `(a9a1c42)` — Kiarash Minoo
+
 ## [1.0.1-beta.8] — 2026-07-28
 
 _No user-facing changes in this release._
