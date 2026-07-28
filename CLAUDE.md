@@ -1,89 +1,54 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for working in this repository.
 
-## Project Overview
-
-ThunderPropagator BuildingBlocks (Project ARC) is a multi-targeted .NET library (net8.0, net9.0, net10.0) of production-ready, reusable components for cloud-native applications. It publishes two NuGet packages to GitHub Packages.
-
-## Build Commands
+## Commands
 
 ```powershell
 dotnet restore
 dotnet build -c Release
 dotnet test -c Release
-dotnet test --filter "FullyQualifiedName~FeederMessageTest"   # single test
+dotnet test --filter "FullyQualifiedName~<Name>"
 dotnet pack -c Release -o artifacts/pkg
 ```
 
-Benchmarks run via: `dotnet run -c Release --filter "*Benchmark*"` from the unit test project.
-
 ## Architecture
 
-Strict two-layer structure enforced by `Tests/ArchTests/ArchitectureTests.cs`:
+A flat set of sibling projects, one per serialization format, each depending only on an external shared building-blocks package (for the serializer/deserializer contracts and a lookup registry) and that format's own serialization library. There is no local shared-kernel project — the shared contract lives upstream.
 
-- **Application Layer** (`src/ThunderPropagator.BuildingBlocks.Application/`): Core building blocks — zero Infrastructure dependencies. Breaking this rule will fail the arch tests.
-- **Infrastructure Layer** (`src/ThunderPropagator.BuildingBlocks.Infrastructure/`): System monitoring, health checks, network. Depends on Application only.
+## The per-format template
 
-## Key Design Patterns
+Every format project follows the same shape:
 
-**FeederMessage** — Dictionary-backed message base class (`ConcurrentDictionary` internally). Strongly-typed properties use `GetValueOrDefault<T>()` / `GetValueOrNull<T>()` / `SetValue()`. Inherit and add typed properties:
+- **`{Format}FormatSerializer`** — sealed, implements both the serializer and deserializer contracts from the shared package. Exposes a static serializer-type identifier and a media-type constant.
+- **`{Format}Helper`** — static class with the actual encode/decode methods: string, bytes, and base64, both directions.
+- **`DependencyInjection`** — static class exposing one `Add{Format}FormatSerializer(IServiceCollection)` extension that registers the serializer against both contract interfaces.
+
 ```csharp
-public Guid Id
+public static IServiceCollection Add{Format}FormatSerializer(this IServiceCollection services)
 {
-    get => GetValueOrDefault(Guid.NewGuid());
-    set => SetValue(value);
+    Guard.Against.Null(services);
+    services.AddSingleton<IFormatSerializer, {Format}FormatSerializer>();
+    services.AddSingleton<IFormatDeserializer, {Format}FormatSerializer>();
+    return services;
 }
 ```
 
-**ServiceConfiguration** — Abstract base for config with `INotifyPropertyChanged` / `INotifyPropertyChanging`. Properties tracked and serialized via reflection with `CaseConverter` for camelCase JSON.
+## Conventions
 
-**DisposableObject** — Base class for all disposable types. Override `DisposeManagedResources()` or `DisposeUnmanagedResources()`. Use `AnonymousDisposable` for action-based cleanup.
+- Wrap every serialize/deserialize call in a telemetry activity, guarded by a listener check.
+- Guard-clause library for argument validation in DI registration methods.
+- Nullable + implicit usings on; centrally managed package versions; centrally managed target frameworks and version.
+- The shared package must never depend downward on any individual format project — an architecture test enforces this direction.
 
-**Telemetry** — Wrap all significant operations with OpenTelemetry activities:
-```csharp
-using var activity = Telemetry.HasListeners() ? Telemetry.StartActivity(ClassName_MethodName, ActivityKind.Internal) : null;
-activity?.SetTag("key", value);
-```
-Naming convention: `{ClassName}_{MethodName}`.
+## Adding a format
 
-**Platform Providers** — System monitoring pattern: define `IMetricsClient<TMetric>`, internal `IXxxProvider` with per-platform implementations, `CreatePlatformProvider()` factory using `RuntimeInformation.IsOSPlatform()`. Never use external platform-specific packages — only .NET BCL and CLI tools (e.g., nvidia-smi). Graceful degradation (null/empty + error message) when metrics unavailable.
+New sibling project → the serializer class implementing both upstream contracts → the static helper class with all four encode/decode combinations → the DI extension → unit tests covering round-trip serialization for each combination → an architecture-test check confirming the new project isn't depended on from the shared package.
 
-## Code Conventions
+## Testing
 
-- Internal fields: `_camelCase` with underscore prefix
-- Platform name casing: `MacOs` not `MacOS`; `onAcPower` not `onACPower`
-- Guard clauses via Ardalis: `Guard.Against.Null(param)` with `[CallerArgumentExpression]`
-- XML docs are **required** for all public APIs (`GenerateDocumentationFile=true`; build fails without them)
-- `TreatWarningsAsErrors=true` — no suppressed warnings except CS1591 and CS0067
-- `sealed` classes in DEBUG builds become non-sealed for testability
-- Block-scoped namespace declarations; no primary constructors; no expression-bodied methods/constructors (properties/accessors are fine)
+xUnit + NSubstitute. A separate architecture-test project checks the dependency direction between the shared package and each format project.
 
-## Serialization Helpers
+## Build & versioning
 
-All serialization helpers expose three variants (string, bytes, base64) for every format:
-- JSON (`ToJson` / `FromJson`) — System.Text.Json with `[JsonSerialization]` attribute support
-- NetJSON, Newtonsoft.Json, YAML (YamlDotNet), ProtoBuf (protobuf-net), MessagePack
-
-Wrap every helper method in a telemetry activity.
-
-## Build Configuration
-
-- Versions centralized in `Directory.Build.props` — do not edit version manually; CI handles bumps
-- Package dependencies centralized in `Directory.Packages.props` (`ManagePackageVersionsCentrally=true`)
-- Debug builds append `.Debug` to package IDs
-- `EnablePreviewFeatures=true` only in test projects
-
-## CI/CD
-
-- `develop` branch → reusable beta workflow → increments beta version and publishes to GitHub Packages
-- `release/` branch → reusable release workflow → strips beta suffix, creates GitHub Release, syncs back to develop
-- Secrets required: `GH_TOKEN`, `NUGET_API_KEY`
-
-## Adding New Features
-
-**New metric** (Infrastructure): Create metric record → `IMetricsClient<TMetric>` interface → platform providers → register in `SystemResourceMonitorExtensions.cs` → add property to `SystemResourceMonitorMetrics.cs` → update `ISystemResourceMonitor.Collect()` → add docs in `docs/`.
-
-**New helper** (Application): Static class with extension methods in `src/.../Helpers/` → `[CallerArgumentExpression]` for validation → XML docs → tests in `Tests/ThunderPropagator.UnitTests/`.
-
-**New serialization format**: Implement all six variants (string/bytes/base64 × serialize/deserialize), wrap each in a telemetry activity.
+Version and target frameworks are centralized; CI bumps automatically on a beta branch (prerelease, every push) and a release branch (finalizes the version) — never hand-edit during feature work. Package versions are centrally managed.

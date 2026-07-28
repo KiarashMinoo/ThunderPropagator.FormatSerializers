@@ -1,10 +1,10 @@
-﻿<Project>
+<Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
   </PropertyGroup>
   <PropertyGroup Label="ThunderPropagatorPackages">
-    <BuildingBlocksVersion>1.0.1-beta.114</BuildingBlocksVersion>
+    <BuildingBlocksVersion>1.0.1-beta.120</BuildingBlocksVersion>
     <BuildingBlocksPackageId>ThunderPropagator.BuildingBlocks$(PackageIdConfigurationSuffix)$(PackageIdPlatformSuffix)</BuildingBlocksPackageId>
   </PropertyGroup>
   <ItemGroup>
