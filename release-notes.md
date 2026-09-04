@@ -1,5 +1,5 @@
-## [1.0.1-beta.12] — 2026-07-29
+## [1.0.1-beta.13] — 2026-09-04
 
-### 📝 Documentation
+### ⚙️ CI / Tooling
 
-- Fix NU5050: remove case-duplicate ReadMe.md tracked alongside README.md `(a94ba99)` — Kiarash Minoo
+- ThunderPropagator.FormatSerializers: switch NuGet publish to OIDC and bump package versions `(e072d79)` — Kiarash Minoo
