@@ -1,5 +1,9 @@
-## [1.0.1-beta.15] — 2026-09-06
+## [1.0.1-beta.16] — 2026-09-06
 
 ### 📦 Dependencies
 
-- ThunderPropagator.FormatSerializers: drop local BuildingBlocksPackageId override `(b04d0ca)` — Kiarash Minoo
+| Package | Old | New |
+|---------|-----|-----|
+| $(BuildingBlocksPackageId) | $(BuildingBlocksVersion) | 1.0.1-beta.130 |
+
+- ThunderPropagator.FormatSerializers: inline BuildingBlocks version, drop local property `(ee8d536)` — Kiarash Minoo

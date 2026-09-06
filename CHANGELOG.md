@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.16] — 2026-09-06
+
+### 📦 Dependencies
+
+| Package | Old | New |
+|---------|-----|-----|
+| $(BuildingBlocksPackageId) | $(BuildingBlocksVersion) | 1.0.1-beta.130 |
+
+- ThunderPropagator.FormatSerializers: inline BuildingBlocks version, drop local property `(ee8d536)` — Kiarash Minoo
+
 ## [1.0.1-beta.15] — 2026-09-06
 
 ### 📦 Dependencies
