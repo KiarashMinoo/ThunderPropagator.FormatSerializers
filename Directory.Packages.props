@@ -4,8 +4,11 @@
     <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
   </PropertyGroup>
   <PropertyGroup Label="ThunderPropagatorPackages">
+    <!-- BuildingBlocksPackageId itself comes from Shared.PackageIds.props (imported via
+         Directory.Build.props -> SharedProps.props -> Shared.NugetBuild.props); only the
+         version stays local, so this family package's id pattern is defined in exactly one
+         place across the whole ThunderPropagator org. -->
     <BuildingBlocksVersion>1.0.1-beta.130</BuildingBlocksVersion>
-    <BuildingBlocksPackageId>ThunderPropagator.BuildingBlocks$(PackageIdConfigurationSuffix)$(PackageIdPlatformSuffix)</BuildingBlocksPackageId>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="$(BuildingBlocksPackageId)" Version="$(BuildingBlocksVersion)" />
