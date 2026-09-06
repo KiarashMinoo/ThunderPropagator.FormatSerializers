@@ -1,5 +1,5 @@
-## [1.0.1-beta.14] — 2026-09-06
+## [1.0.1-beta.15] — 2026-09-06
 
-### ⚙️ CI / Tooling
+### 📦 Dependencies
 
-- ThunderPropagator.FormatSerializers: disable NuGet publish variant filter, bump BuildingBlocks `(e109692)` — Kiarash Minoo
+- ThunderPropagator.FormatSerializers: drop local BuildingBlocksPackageId override `(b04d0ca)` — Kiarash Minoo
