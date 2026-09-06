@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.14] — 2026-09-06
+
+### ⚙️ CI / Tooling
+
+- ThunderPropagator.FormatSerializers: disable NuGet publish variant filter, bump BuildingBlocks `(e109692)` — Kiarash Minoo
+
 ## [1.0.1-beta.13] — 2026-09-04
 
 ### ⚙️ CI / Tooling
