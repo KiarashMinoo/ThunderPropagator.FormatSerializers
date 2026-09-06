@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.15] — 2026-09-06
+
+### 📦 Dependencies
+
+- ThunderPropagator.FormatSerializers: drop local BuildingBlocksPackageId override `(b04d0ca)` — Kiarash Minoo
+
 ## [1.0.1-beta.14] — 2026-09-06
 
 ### ⚙️ CI / Tooling
