@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Guidance for working in this repository.
+<!-- Humans: keep this file lean — the per-format template lives in .claude/rules/, not here. -->
 
 ## Commands
 
@@ -14,41 +14,25 @@ dotnet pack -c Release -o artifacts/pkg
 
 ## Architecture
 
-A flat set of sibling projects, one per serialization format, each depending only on an external shared building-blocks package (for the serializer/deserializer contracts and a lookup registry) and that format's own serialization library. There is no local shared-kernel project — the shared contract lives upstream.
+Flat set of sibling projects, one per serialization format, each depending only on an external shared building-blocks package (serializer/deserializer contracts + lookup registry) and that format's own serialization library. No local shared-kernel project — the shared contract lives upstream.
 
-## The per-format template
-
-Every format project follows the same shape:
-
-- **`{Format}FormatSerializer`** — sealed, implements both the serializer and deserializer contracts from the shared package. Exposes a static serializer-type identifier and a media-type constant.
-- **`{Format}Helper`** — static class with the actual encode/decode methods: string, bytes, and base64, both directions.
-- **`DependencyInjection`** — static class exposing one `Add{Format}FormatSerializer(IServiceCollection)` extension that registers the serializer against both contract interfaces.
-
-```csharp
-public static IServiceCollection Add{Format}FormatSerializer(this IServiceCollection services)
-{
-    Guard.Against.Null(services);
-    services.AddSingleton<IFormatSerializer, {Format}FormatSerializer>();
-    services.AddSingleton<IFormatDeserializer, {Format}FormatSerializer>();
-    return services;
-}
-```
+Per-format class template: `.claude/rules/format-template.md`.
 
 ## Conventions
 
 - Wrap every serialize/deserialize call in a telemetry activity, guarded by a listener check.
 - Guard-clause library for argument validation in DI registration methods.
-- Nullable + implicit usings on; centrally managed package versions; centrally managed target frameworks and version.
-- The shared package must never depend downward on any individual format project — an architecture test enforces this direction.
+- Nullable + implicit usings on; centrally managed package versions, TFMs, version.
+- Shared package must never depend downward on any individual format project — architecture-test enforced.
 
-## Adding a format
+## Adding a Format
 
-New sibling project → the serializer class implementing both upstream contracts → the static helper class with all four encode/decode combinations → the DI extension → unit tests covering round-trip serialization for each combination → an architecture-test check confirming the new project isn't depended on from the shared package.
+New sibling project → serializer class (implements both upstream contracts) → static helper class (all four encode/decode combinations) → DI extension → unit tests (round-trip per combination) → architecture-test check confirming the shared package doesn't depend on the new project.
 
 ## Testing
 
-xUnit + NSubstitute. A separate architecture-test project checks the dependency direction between the shared package and each format project.
+xUnit + NSubstitute. Architecture-test project checks dependency direction between the shared package and each format project.
 
-## Build & versioning
+## Build & Versioning
 
-Version and target frameworks are centralized; CI bumps automatically on a beta branch (prerelease, every push) and a release branch (finalizes the version) — never hand-edit during feature work. Package versions are centrally managed.
+Version/TFMs centralized; CI bumps automatically on a beta branch (prerelease, every push) and a release branch (finalizes version) — never hand-edit during feature work. Package versions centrally managed.
