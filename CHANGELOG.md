@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.18] — 2026-09-14
+
+### 🏠 Chores
+
+- ThunderPropagator.FormatSerializers: move format template into .claude/rules, bump BuildingBlocks `(2587c33)` — Kiarash Minoo
+
 ## [1.0.1-beta.17] — 2026-09-14
 
 ### 📦 Dependencies
