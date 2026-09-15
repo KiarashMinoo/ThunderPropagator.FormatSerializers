@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.19] — 2026-09-15
+
+### ⚙️ CI / Tooling
+
+- ThunderPropagator.FormatSerializers: queue NuGet publishes and widen dependency discovery `(05a6b5b)` — Kiarash Minoo
+
 ## [1.0.1-beta.18] — 2026-09-14
 
 ### 🏠 Chores

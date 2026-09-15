@@ -1,5 +1,5 @@
-## [1.0.1-beta.18] — 2026-09-14
+## [1.0.1-beta.19] — 2026-09-15
 
-### 🏠 Chores
+### ⚙️ CI / Tooling
 
-- ThunderPropagator.FormatSerializers: move format template into .claude/rules, bump BuildingBlocks `(2587c33)` — Kiarash Minoo
+- ThunderPropagator.FormatSerializers: queue NuGet publishes and widen dependency discovery `(05a6b5b)` — Kiarash Minoo
