@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.21] — 2026-09-22
+
+### 📦 Dependencies
+
+| Package | Old | New |
+|---------|-----|-----|
+| $(BuildingBlocksPackageId) | 1.0.1-beta.135 | 1.0.1-beta.136 |
+
+- ThunderPropagator.FormatSerializers: bump BuildingBlocks package to 1.0.1-beta.136 `(f121a64)` — Kiarash Minoo
+
 ## [1.0.1-beta.20] — 2026-09-22
 
 ### 📦 Dependencies
