@@ -1,9 +1,5 @@
-## [1.0.1-beta.21] — 2026-09-22
+## [1.0.1-beta.22] — 2026-10-08
 
-### 📦 Dependencies
+### 📝 Documentation
 
-| Package | Old | New |
-|---------|-----|-----|
-| $(BuildingBlocksPackageId) | 1.0.1-beta.135 | 1.0.1-beta.136 |
-
-- ThunderPropagator.FormatSerializers: bump BuildingBlocks package to 1.0.1-beta.136 `(f121a64)` — Kiarash Minoo
+- Include architecture diagram badge in README `(2995d69)` — Kiarash Minoo
