@@ -4,7 +4,7 @@
     <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="$(BuildingBlocksPackageId)" Version="1.0.1-beta.136" />
+    <PackageVersion Include="$(BuildingBlocksPackageId)" Version="$(ThunderPropagatorFloatingVersion)" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'" Label="Microsoft.Extensions">
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.*" />
@@ -17,7 +17,7 @@
   </ItemGroup>
   <ItemGroup Label="Application Packages">
     <PackageVersion Include="Bogus" Version="35.6.5" />
-    <PackageVersion Include="NodaTime" Version="3.2.2" />
+    <PackageVersion Include="NodaTime" Version="3.3.6" />
     <PackageVersion Include="CaseConverter" Version="2.0.1" />
     <PackageVersion Include="JetBrains.Annotations" Version="2026.2.0" />
     <PackageVersion Include="MessagePack" Version="3.1.12" />
@@ -26,13 +26,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="NetJSON" Version="1.4.7" />
-    <PackageVersion Include="protobuf-net" Version="3.4.30" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.19.2" />
+    <PackageVersion Include="protobuf-net" Version="3.4.40" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
     <PackageVersion Include="YamlDotNet" Version="18.1.0" />
     <PackageVersion Include="Ardalis.GuardClauses" Version="5.0.0" />
     <PackageVersion Include="SharpZipLib" Version="1.4.2" />
-    <PackageVersion Include="Apache.NMS.ActiveMQ" Version="2.2.0" />
-    <PackageVersion Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.2.5" />
+    <PackageVersion Include="Apache.NMS.ActiveMQ" Version="2.3.0" />
+    <PackageVersion Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="4.0.0" />
     <PackageVersion Include="ToonNet" Version="1.0.4" />
   </ItemGroup>
   <ItemGroup Label="Testing Packages">
