@@ -1,5 +1,5 @@
-## [1.0.1-beta.24] — 2026-10-25
+## [1.0.1-beta.25] — 2026-11-09
 
 ### ⚙️ CI / Tooling
 
-- ThunderPropagator.FormatSerializers: float BuildingBlocks version and add third-party updater `(b782bfe)` — Kiarash Minoo
+- Add security and quality scanning `(867f6d8)` — Kiarash Minoo

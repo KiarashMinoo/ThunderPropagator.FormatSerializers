@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.1-beta.25] — 2026-11-09
+
+### ⚙️ CI / Tooling
+
+- Add security and quality scanning `(867f6d8)` — Kiarash Minoo
+
 ## [1.0.1-beta.24] — 2026-10-25
 
 ### ⚙️ CI / Tooling
